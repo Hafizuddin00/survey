@@ -127,7 +127,7 @@ if (isset($_POST['submit'])) {
         $mail->Body = "Dear $fullname,
 
 We would like to thank you for choosing us as your choice to manage your survey with us.
-Your role (1-Administrator, 2-Researcher): $type.
+Your role (1-Supervisor, 2-Baker): $type.
 Your Username: $email, 
 Your Password: $password.
 
