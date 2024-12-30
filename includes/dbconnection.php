@@ -11,6 +11,7 @@ $dbh = new PDO("mysql:host=".DB_HOST.";dbname=".DB_NAME,DB_USER, DB_PASS,array(P
 }
 catch (PDOException $e)
 {
-exit("Error: " . $e->getMessage());
+    error_log("Database connection error: " . $e->getMessage()); // Log the error message
+    exit("Error: Unable to connect to the database. Please try again later."); // Display a generic message
 }
 ?>

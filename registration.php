@@ -7,8 +7,15 @@ use PHPMailer\PHPMailer\SMTP;
 
 if (isset($_POST['submit'])) {
     // Retrieve form data
-    $fullname = $_POST['fullname'];
-    $email = $_POST['email'];
+    // Sanitize and validate user inputs
+    $fullname = htmlspecialchars(trim($_POST['fullname']), ENT_QUOTES, 'UTF-8');
+    $email = filter_var(trim($_POST['email']), FILTER_SANITIZE_EMAIL);
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        echo '<script>alert("Invalid email address.")</script>';
+        echo "<script>window.location.href = 'registration.php';</script>";
+        exit;
+    }
+    
     $password = md5($_POST['password']);
     $type = $_POST['type'];
 

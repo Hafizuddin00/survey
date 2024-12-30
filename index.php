@@ -2,9 +2,22 @@
 <html lang="en">
 <?php session_start() ?>
 <?php 
-	if(!isset($_SESSION['login_id']))
-	    header('location:homepage.php');
-	include 'header.php' 
+  if (!isset($_SESSION['login_id'])) {
+    header('location:homepage.php');
+    exit;
+  }
+  include 'header.php';
+
+  // Define allowed pages
+  $allowed_pages = [
+    'home' => 'home.php',
+    'dashboard' => 'dashboard.php',
+    'profile' => 'profile.php',
+  ];
+
+  // Sanitize and validate the `page` parameter
+  $page = isset($_GET['page']) ? $_GET['page'] : 'home';
+  $page = isset($allowed_pages[$page]) ? $page : 'home';
 ?>
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
 <div class="wrapper">

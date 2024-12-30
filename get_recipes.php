@@ -17,7 +17,8 @@ if (isset($_GET['product_id1'])) {
         $recipes = $query->fetchAll(PDO::FETCH_OBJ);  // Fetch all recipe names
         echo json_encode($recipes);  // Send the result as JSON
     } catch (PDOException $e) {
-        echo json_encode(['error' => 'Database query failed: ' . $e->getMessage()]);
+        error_log("Database query failed: " . $e->getMessage()); // Log the detailed error
+        echo json_encode(['error' => 'An internal error occurred. Please try again later.']); // Generic error message
     }
 } else {
     echo json_encode(['error' => 'Product ID not provided.']);

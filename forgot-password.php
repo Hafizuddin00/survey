@@ -7,7 +7,13 @@ require "vendor/autoload.php";
   use PHPMailer\PHPMailer\SMTP;
 if(isset($_POST['submit']))
   {
-$email=$_POST['email'];
+  // Sanitize and validate email input
+  $email = filter_var(trim($_POST['email']), FILTER_SANITIZE_EMAIL);
+  if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+      echo '<script>alert("Invalid email address.")</script>';
+      echo "<script>window.location.href = 'forgot-password.php';</script>";
+      exit;
+  }
   $sql ="SELECT email FROM users WHERE email=:email ";
 $query= $dbh -> prepare($sql);
 $query-> bindParam(':email', $email, PDO::PARAM_STR);
