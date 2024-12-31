@@ -29,8 +29,8 @@ foreach($results as $row)
         </div>
       <?php $cnt=$cnt+1;}} ?></div>
       <div class="col-md-3 footer-right">
-        <h3>EazySurvey</h3>
-        <p>This Online Survey System in PHP and MySQL, allows you to easily manage surveys, record user votes, look at the proportions of the respondents' choices, all in a simple and effective way. </p>
+        <h3>Production System</h3>
+        <p>This Online Production System in PHP and MySQL, allows baker and supervisor to easily manage their production , recipe , and ingeredient to produce the cake or other. </p>
       </div>
       <div class="clearfix"> </div> 
     </div>

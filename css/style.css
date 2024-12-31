@@ -886,8 +886,8 @@ color: #FFFFFF;
   text-transform: uppercase;
 }
 .footer-right p{
-  color: #989898;
-    font-size: .85em;
+  color: #fff;
+  font-size: .85em;
   margin: .5em 0 0 0;
   line-height: 1.8em;
   font-weight: 400;
