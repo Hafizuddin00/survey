@@ -60,7 +60,7 @@ include('includes/dbconnection.php');
         <ul class="rslides" id="slider">
          <li>     
           <h3>Production System</h3>      
-           <p>Register Here To Get Started</p>             
+           <p>Welcome to Ryan Bakery !!</p>             
           <div class="readmore">
           <a href="registration.php">Register Here<i class="glyphicon glyphicon-menu-right"> </i></a>
           </div>

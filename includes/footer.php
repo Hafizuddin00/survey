@@ -42,7 +42,7 @@ foreach($results as $row)
     <!-- container -->
     <div class="container">
       <div class="copyright-left">
-      <p>© <?php echo date('Y');?> EazySurvey | Survey Management System </p>
+      <p>© <?php echo date('Y');?> Ryan Bakery | Production Management System </p>
       </div>
       <div class="copyright-right">
         <ul>

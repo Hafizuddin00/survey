@@ -1,9 +1,22 @@
-<style>
-        /* Override sidebar-dark-primary to make it blue */
-        .sidebar-dark-dark {
-          background: radial-gradient(circle, #28a745, #007bff, #ffc107); /* Green to Blue to Yellow */
 
-        }
+<style>
+    /* Radial Gradient Background */
+    .sidebar-dark-dark {
+        background: radial-gradient(circle, #28a745, #007bff, #ffc107); /* Green to Blue to Yellow */
+    }
+
+    /* Ensure no content hides rounded corners */
+    .main-sidebar {
+        overflow: hidden !important; /* Prevent overflow */
+        border-bottom-right-radius: 70px !important; /* Bottom right corner */
+    }
+
+    /* Sidebar itself */
+    .sidebar {
+        height: 100%;
+        border-top-right-radius: 50px !important; /* Match the radius for consistency */
+        border-bottom-right-radius: 50px !important;
+    }
 </style>
   <aside class="main-sidebar sidebar-dark-dark elevation-4">
     <div class="dropdown">
