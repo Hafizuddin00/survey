@@ -10,7 +10,6 @@
             <span class="icon-bar"> </span>
             <span class="icon-bar"> </span>
           </button>
-          <div class="logo"><a href="index.php"><img src="images/logo.png"></a></div>
           </div>
           <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">

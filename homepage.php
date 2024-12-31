@@ -6,7 +6,7 @@ include('includes/dbconnection.php');
 <!doctype html>
 <html>
 <head>
-<title>Daniel Bakery | Welcome to Production System</title>
+<title>Ryan Bakery | Welcome to Production System</title>
 <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
 <!--bootstrap-->
 <link href="css/bootstrap.css" rel="stylesheet" type="text/css" media="all">
@@ -86,7 +86,8 @@ if($query->rowCount() > 0)
 foreach($results as $row)
 {               ?>
 		<h2><?php  echo htmlentities($row->PageTitle);?></h2>
-		<p><?php  echo ($row->PageDescription);?></p><?php $cnt=$cnt+1;}} ?>
+    <p>Welcome to our Bakery Production Management System! We are a team of dedicated software developers who have designed a platform to streamline the entire bakery production process. Our goal is to provide an efficient, easy-to-use system that simplifies production planning, inventory management, and order tracking. With our system, bakery managers can seamlessly schedule production, manage inventory levels, track batch progress, and ensure timely delivery of baked goods. The platform also allows for real-time monitoring of production status, giving you complete visibility over your operations. We understand the importance of quality control and have integrated features to ensure consistency and accuracy in every batch. Our team is committed to supporting your bakery’s success, providing exceptional customer service, and ensuring that your production runs smoothly. Thank you for choosing our Bakery Production Management System – we are here to help you enhance your bakery operations and achieve your production goals!</p> 
+		<?php $cnt=$cnt+1;}} ?>
 	</div>
 </div>
 <!--/welcome-->
