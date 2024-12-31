@@ -26,7 +26,7 @@ header("location:index.php?page=home");
 	    position: fixed;
 	    top:0;
 	    left: 0;
-		background-image: url('images/backgound.jpg');
+		background-image: url('images/backgoundtry.jpg');
 		background-repeat: no-repeat;
 		background-attachment: fixed;
 		background-size: 100% 100%;
@@ -35,7 +35,8 @@ header("location:index.php?page=home");
 	main#main{
 		width:100%;
 		height: calc(100%);
-		display: flex;
+		display: flex; 
+	
 	}
 
 </style>
@@ -45,27 +46,30 @@ header("location:index.php?page=home");
 
   <main id="main" >
   	
-  		<div class="align-self-center w-100">
-		  <div class="logo" style="margin-left: 250px"><a href="index.php"><img src="images/logo.png"></a></div>
-  		
-  			<div class="card col-md-4" style="margin-left: 180px;">
-  				<div class="card-body">
-  					<form id="login-form" >
-  						<div class="form-group">
-  							<label for="email" class="control-label text-dark">Email</label>
-  							<input type="text" id="email" name="email" class="form-control form-control-sm">
-  						</div>
-  						<div class="form-group">
-  							<label for="password" class="control-label text-dark">Password</label>
-  							<input type="password" id="password" name="password" class="form-control form-control-sm">
-  						</div>
-  						<center><button class="btn-sm btn-block btn-wave col-md-4 btn-primary">Login</button></center>
-						  <a href="forgot-password.php" class="auth-link text-black">Forgot password?</a>
-  					</form>
-  				</div>
-  			</div>
-  		
-  		</div>
+			<div class="align-self-center w-100" style="display: flex; justify-content: center; align-items: center; height: 100vh; padding: 10px;">
+			<div class="card col-12 col-md-6 col-lg-4">
+				<div class="card-body">
+				<!-- Login Label -->
+				<h3 class="text-center text-dark mb-4">Login System</h3>
+				<!-- Form -->
+				<form id="login-form">
+					<div class="form-group">
+					<label for="email" class="control-label text-dark">Email</label>
+					<input type="text" id="email" name="email" class="form-control form-control-sm">
+					</div>
+					<div class="form-group">
+					<label for="password" class="control-label text-dark">Password</label>
+					<input type="password" id="password" name="password" class="form-control form-control-sm">
+					</div>
+					<center>
+					<button class="btn-sm btn-block btn-wave col-md-4 btn-primary">Login</button>
+					</center>
+					<a href="forgot-password.php" class="auth-link text-black">Forgot password?</a>
+				</form>
+				</div>
+			</div>
+			</div>
+
   </main>
 
   <a href="#" class="back-to-top"><i class="icofont-simple-up"></i></a>
