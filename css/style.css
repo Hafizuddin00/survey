@@ -1,6 +1,6 @@
 
 html, body{
-font-family: 'Open Sans', sans-serif;
+font-family:  'Playfair Display', serif;
  font-size: 100%;
  background: #FFf;
 }
@@ -26,11 +26,12 @@ input[type="button"],input[type="submit"],li.parallelogram{
 	-ms-transition:0.5s all;
 }
 h1,h2,h3,h4,h5,h6{
+	font-family: Georgia, serif;
    margin:0;	
 }	
-p{
+p,a{
 	margin:0;
-font-family: 'Open Sans', sans-serif;
+	font-family: Georgia, serif;
 }
 ul{
 	margin:0;
@@ -51,22 +52,24 @@ div#bs-example-navbar-collapse-1 {
 }
 /*--header-nav--*/
 .header{
-    background-color: #36454F;
+    background-color: #000;
     border: none;
     padding: .6em 0em 1.8em;
     margin: 0;
     border-radius: 0;
 }
 .navbar-default .navbar-nav > li > a {
+	font-family: Georgia, serif;
     color: #fff !important;
+	text-align: right;
 }
 .navbar {
     min-height: 0 !important;
     margin-bottom: 0 !important;
 }
 .navbar-default {
-    background-color: #36454F !important;
-    border-color: #36454F !important;
+    background-color: #000 !important;
+    border-color: #000 !important;
 }
 .navbar-header a.navbar-brand {
 	color: #fff;
@@ -86,10 +89,11 @@ a.navbar-brand span {
 	text-decoration:none;
 }
 .navbar-nav>li>a {
-	    padding-top: 26px !important;
-    padding-bottom: 0 !important;
-    	font-size: 20px;
-	font-weight: 300;
+		margin:15px 15px 15px 15px;
+	    padding-top: 35px !important;
+    	padding-bottom: 0 !important;
+    	font-size: 25px;
+		font-weight: 300;
 }
 ul.nav.navbar-nav.navbar-right.margin-top {
 	margin-top: 0px;
@@ -204,8 +208,7 @@ span.glyphicon.glyphicon-search.edit {
 	transition:0.5s;
 }
 .banner{
-	background-image: url(../images/photos.jpg);
-	/* background:url(); */
+	background-image: url(../images/backgoundtry.jpg);
 	background-size:cover;
 	min-height:650px;
 	padding-top:0em !important;
@@ -293,23 +296,26 @@ position: relative;
  	color: #000;
     font-size: 3em;
     font-weight: 100;
-    margin-top: 2em;
+    margin-top: 0.5em; 
+	margin: 5px;
     text-align: left;
  }
 .rslides p{
     color: #000;
-    font-size: .85em;
+    font-size: 18px ;
     width: 46%;
-    line-height: 1.8em;
+    line-height: 1.0em;
     text-align: left;
+	margin: 5px;
     padding: 0.5em 0 2em;
-    font-weight: 100;
+    font-weight: 300;
 }
 .rslides a{
-background: #343a40;
-    padding: 15px 17px 15px 20px;
+background: #000;
+    padding: 13px 17px 13px 25px;
     color: #fff;
-    margin-top: 11px;
+    margin-top: 20px;
+	margin: 5px;
         transition: 0.5s all;
     -webkit-transition: 0.5s all;
     -moz-transition: 0.5s all;
@@ -570,11 +576,12 @@ fieldset#body {
 }
 .welcome h2 {
     font-size: 3em;
-    color:#797979;
+    color:#fff;
         font-weight: 100;
 }
 .welcome p {
     font-size: .85em;
+	color :#fff ;
 	width: 80%;
     margin:0 auto;
     line-height:1.8em;
@@ -1005,7 +1012,7 @@ color: #FFFFFF;
 }
 .abt-info-pic h3 {
 font-size: 1.4em;
-    color: #737373;
+    color: #000;
     line-height: 1.3em;
     padding-top: 0;
 }
@@ -1013,14 +1020,14 @@ font-size: 1.4em;
   line-height: 1.7em;
   margin-top: 1em;
     font-size: .85em;
-  color: #777;
+  color: #000;
 }
 .abt-info-pic ul{
 	margin-top:1em;
 }
 .abt-info-pic li {
   margin: 0 0 10px 20px;
-  color: #9A9598;
+  color: #000(324, 2%, 59%);
   font-size: 0.9em;
   text-decoration: none;
 }
@@ -1029,7 +1036,7 @@ font-size: 1.4em;
 }
 .testimonals h3,.team h3{
   font-size: 1.8em;
-  color: #737373;
+  color: #000;
   margin-bottom:0.7em;
       padding: 0;
 }
@@ -1047,7 +1054,7 @@ font-size: 1.4em;
   border-radius: 0;
   line-height: 1.5em;
   font-size: .85em;
-  color: #7d7d7d;
+  color: #000;
   transition:0.5s all;
 	-webkit-transition:0.5s all;
 	-moz-transition:0.5s all;
@@ -1751,7 +1758,7 @@ ul.p_n-list li a:hover{
 	    line-height: 1.8em;
 	    margin-top: 0em;
 	    font-size: .85em;
-	    color: #B1B1B1;
+	    color: #000;
 	}
 	.abt-info-pic h3 {
 	    font-size: 1em;
@@ -1951,7 +1958,7 @@ ul.p_n-list li a:hover{
 	    line-height: 1.8em;
 	    margin-top: 0em;
 	    font-size: .85em;
-	    color: #B1B1B1;
+	    color: #000;
 	}
 	.abt-info-pic h3 {
 	    font-size: 1em;
@@ -2578,7 +2585,7 @@ ul.p_n-list li a:hover{
 	    font-size: 1.2em;
 	}
 	.abt-info-pic li {
-	    color: #837F7F;
+	    color: #000;
 	    font-size: 0.8em;
 	}
 	.navbar-toggle {
