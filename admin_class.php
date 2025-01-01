@@ -157,6 +157,26 @@ Class Action {
 		}
 	}
 
+	function update_quality() {
+		extract($_POST);
+		$update = $this->db->query("UPDATE categories SET quality_test = '$quality_test' WHERE id = $id");
+		if ($update) {
+			return 1;
+		} else {
+			return 0;
+		}
+	}
+
+	function save_comment() {
+		extract($_POST);
+		$update = $this->db->query("UPDATE categories SET comment = '$comment' WHERE id = $id");
+		if ($update) {
+			return 1;
+		} else {
+			return 0;
+		}
+	}
+
 	function delete_all_data() {
 		// Execute the query to delete all categories where status is 'Finished'
 		$save = $this->db->query("DELETE FROM categories WHERE status IN ('Finished', 'Archived')");

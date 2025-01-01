@@ -117,7 +117,7 @@ if(!isset($conn)){
 							</div>
 							<div class="form-group">
     						<label for="status">Status (Baker will update the status)</label>
-							<input type="text" name="status" class="form-control" required value="UNFINISHED" readonly>
+							<input type="text" name="status" class="form-control" required value="Unfinished" readonly>
 							</div>
 
 							

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 29, 2024 at 11:31 AM
+-- Generation Time: Jan 01, 2025 at 11:52 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -83,17 +83,21 @@ CREATE TABLE `categories` (
   `starteddate` varchar(50) NOT NULL,
   `estimationduration` varchar(20) NOT NULL,
   `hours` int(6) NOT NULL,
-  `status` text NOT NULL
+  `status` text NOT NULL,
+  `comment` text NOT NULL,
+  `quality_test` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `categories`
 --
 
-INSERT INTO `categories` (`id`, `product_id`, `recipe_name`, `qty_product`, `staff_id`, `created_at`, `starteddate`, `estimationduration`, `hours`, `status`) VALUES
-(104, 103, 'Almond Croissant', 50, '100001', '2024-12-27 05:26:13', '2024-12-28', '13:26', 3, 'In-Progress'),
-(106, 101, 'Red Velvet Cake', 300, '100002', '2024-12-27 11:08:09', '2025-01-03', '19:08', 3, 'UNFINISHED'),
-(110, 102, 'Blueberry Muffin', 9, '100003', '2024-12-28 21:03:43', '2024-12-27', '05:03', 9, 'In-Progress');
+INSERT INTO `categories` (`id`, `product_id`, `recipe_name`, `qty_product`, `staff_id`, `created_at`, `starteddate`, `estimationduration`, `hours`, `status`, `comment`, `quality_test`) VALUES
+(104, 103, 'Almond Croissant', 50, '100001', '2024-12-27 05:26:13', '2024-12-28', '13:26', 3, 'Finished', 'DANIEL TERLALU HENSEM', 'Medium'),
+(110, 102, 'Blueberry Muffin', 9, '100003', '2024-12-28 21:03:43', '2024-12-27', '05:03', 9, 'In-Progress', '', ''),
+(112, 102, 'Banana Muffin', 30, '100002', '2025-01-01 10:15:25', '2025-01-01', '', 4, 'Unfinished', '', ''),
+(117, 103, 'Almond Croissant', 70, '100002', '2025-01-01 10:43:44', '2025-01-03', '', 9, 'Unfinished', '', ''),
+(118, 102, 'Banana Muffin', 20, '100002', '2025-01-01 10:48:49', '2024-12-13', '', 3, 'Unfinished', '', '');
 
 -- --------------------------------------------------------
 
@@ -418,7 +422,7 @@ ALTER TABLE `answers`
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=112;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=119;
 
 --
 -- AUTO_INCREMENT for table `contact`

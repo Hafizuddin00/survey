@@ -40,7 +40,7 @@ if (isset($_GET['id'])) {
 			<td><b><?php echo $estimationduration ?></b></td>
 		</tr>
 		<tr>
-			<th>Duration(Hours):</th>
+			<th>Duration (Day):</th>
 			<td><b><?php echo $hours ?></b></td>
 		</tr>
 		<tr>
@@ -50,6 +50,14 @@ if (isset($_GET['id'])) {
 		<tr>
 			<th>Recipe ID:</th>
 			<td><b><?php echo $recipe_id ?></b></td>
+		</tr>
+		<tr>
+			<th>Quality (Status):</th>
+			<td><b><?php echo $quality_test ?></b></td>
+		</tr>
+		<tr>
+			<th>Commment:</th>
+			<td><b><?php echo $comment ?></b></td>
 		</tr>
 		<tr>
 			<th>Status:</th>
