@@ -16,7 +16,9 @@ if ($recipe_id) {
         $recipe_name = $row['recipe_name'];
         $recipe_ing = $row['recipe_ing'];
         $recipe_step = $row['recipe_step'];
+        $equipment = $row['equipment'];
         $product_id = $row['product_id'];
+
     }
 }
 ?>
@@ -67,14 +69,18 @@ if ($recipe_id) {
 
                         <div class="form-group">
                             <label for="recipe_ing">Recipe Ingredients *</label>
-							<textarea name="recipe_ing" id="" cols="30" rows="4" class="form-control" required><?php echo isset($recipe_ing) ? $recipe_ing : '' ?></textarea>
+							<textarea name="recipe_ing" id="" cols="30" rows="6" class="form-control" required><?php echo isset($recipe_ing) ? $recipe_ing : '' ?></textarea>
                         </div>
                     </div>
 
                     <div class="col-md-6">
+                    <div class="form-group">
+                            <label for="equipment">Equipment to use *</label>
+							<textarea name="equipment" id="" cols="30" rows="5" class="form-control" required><?php echo isset($equipment) ? $equipment : '' ?></textarea>
+                        </div>
                         <div class="form-group">
                             <label for="recipe_step">Steps to Bake *</label>
-							<textarea name="recipe_step" id="" cols="30" rows="15" class="form-control" required><?php echo isset($recipe_step) ? $recipe_step : '' ?></textarea>
+							<textarea name="recipe_step" id="" cols="30" rows="10" class="form-control" required><?php echo isset($recipe_step) ? $recipe_step : '' ?></textarea>
                         </div>
                     </div>
                 </div>

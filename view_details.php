@@ -2,7 +2,7 @@
 <?php
 if (isset($_GET['id'])) {
     $qry = $conn->query("
-        SELECT c.*, r.recipe_id, r.recipe_ing, r.recipe_step 
+        SELECT c.*, r.recipe_id, r.recipe_ing, r.equipment, r.recipe_step 
         FROM categories c
         LEFT JOIN receipe r ON c.recipe_name = r.recipe_name
         WHERE c.id = " . $_GET['id']
@@ -26,6 +26,10 @@ if (isset($_GET['id'])) {
         <tr>
             <th>Recipe Ingredient:</th>
             <td><b><?php echo $recipe_ing ?></b></td>
+        </tr>
+        <tr>
+            <th>Equipment to used:</th>
+            <td><b><?php echo $equipment ?></b></td>
         </tr>
         <tr>
             <th>Step to Bake:</th>

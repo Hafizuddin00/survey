@@ -118,8 +118,8 @@ if($action == "update_user"){
 }
 if ($action == 'insert_recipe') {
     // Insert new recipe
-    $stmt = $conn->prepare("INSERT INTO receipe (recipe_id, product_id, recipe_name, recipe_ing, recipe_step) VALUES (?, ?, ?, ?, ?)");
-    $stmt->bind_param("iisss", $_POST['recipe_id'], $_POST['product_id'], $_POST['recipe_name'], $_POST['recipe_ing'], $_POST['recipe_step']);
+    $stmt = $conn->prepare("INSERT INTO receipe (recipe_id, product_id, recipe_name, recipe_ing, equipment, recipe_step) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("iissss", $_POST['recipe_id'], $_POST['product_id'], $_POST['recipe_name'], $_POST['recipe_ing'], $_POST['equipment'], $_POST['recipe_step']);
     $stmt->execute();
     if ($stmt->affected_rows > 0) {
         echo 0;  // Success
@@ -128,8 +128,8 @@ if ($action == 'insert_recipe') {
     }
 } elseif ($action == 'update_recipe') {
     // Update existing recipe
-    $stmt = $conn->prepare("UPDATE receipe SET product_id = ?, recipe_name = ?, recipe_ing = ?, recipe_step = ? WHERE recipe_id = ?");
-    $stmt->bind_param("ssssi", $_POST['product_id'], $_POST['recipe_name'], $_POST['recipe_ing'], $_POST['recipe_step'], $_POST['recipe_id']);
+    $stmt = $conn->prepare("UPDATE receipe SET product_id = ?, recipe_name = ?, recipe_ing = ?, equipment = ?, recipe_step = ? WHERE recipe_id = ?");
+    $stmt->bind_param("issssi", $_POST['product_id'], $_POST['recipe_name'], $_POST['recipe_ing'], $_POST['equipment'], $_POST['recipe_step'], $_POST['recipe_id']);
     $stmt->execute();
     if ($stmt->affected_rows > 0) {
         echo 0;  // Success
