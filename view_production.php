@@ -36,8 +36,8 @@ if (isset($_GET['id'])) {
 			<td><b><?php echo $starteddate ?></b></td>
 		</tr>
 		<tr>
-			<th>Started Time:</th>
-			<td><b><?php echo $estimationduration ?></b></td>
+			<th>End Date:</th>
+			<td><b><?php echo $enddate ?></b></td>
 		</tr>
 		<tr>
 			<th>Duration (Day):</th>

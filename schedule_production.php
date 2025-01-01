@@ -104,15 +104,15 @@ if(!isset($conn)){
 						</div>	
 						<div class ="col-md-6">
 						<div class="form-group">
-							<label class="control-label">Date *</label>
+							<label class="control-label">Started Date *</label>
 							<input type="date" name="starteddate" class="form-control" required value="<?php echo isset($starteddate) ? $starteddate : '' ?>">
 						</div>
 							<div class="form-group">
-								<label class="control-label">Started Time *</label>
-								<input type="time" name="estimationduration" class="form-control" required value="<?php echo isset($estimationduration) ? $estimationduration : '' ?>">
+								<label class="control-label">End Date *</label>
+								<input type="date" name="enddate" class="form-control" required value="<?php echo isset($enddate) ? $enddate : '' ?>">
 							</div>
 							<div class = "form-group">
-								<label class="control-label">Estimated Duration *</label>
+								<label class="control-label">Estimated Day*</label>
 								<input type="number" name="hours" class="form-control" required placeholder="Enter duration in " value="<?php echo isset($hours) ? $hours : '' ?>">
 							</div>
 							<div class="form-group">
@@ -135,6 +135,66 @@ if(!isset($conn)){
 	</div>
 </div>
 <script>
+    // Set the minimum date for the started date and end date
+    document.addEventListener("DOMContentLoaded", function () {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        const minDate = `${year}-${month}-${day}`;
+
+        // Get the date input fields
+        const startedDateInput = document.querySelector("input[name='starteddate']");
+        const endDateInput = document.querySelector("input[name='enddate']");
+
+        // Set the minimum date attribute
+        startedDateInput.setAttribute("min", minDate);
+        endDateInput.setAttribute("min", minDate);
+
+        // Additional validation: Ensure end date is not earlier than start date
+        startedDateInput.addEventListener("change", function () {
+            endDateInput.setAttribute("min", startedDateInput.value);
+        });
+    });
+
+
+	document.addEventListener("DOMContentLoaded", function () {
+        const startedDateInput = document.querySelector("input[name='starteddate']");
+        const endDateInput = document.querySelector("input[name='enddate']");
+        const staffIdInput = document.querySelector("select[name='staff_id']");
+        const submitButton = document.querySelector("button[name='submit']");
+        const messageBox = document.createElement("div");
+        submitButton.parentNode.insertBefore(messageBox, submitButton);
+
+        function checkAvailability() {
+            const staffId = staffIdInput.value;
+            const startDate = startedDateInput.value;
+            const endDate = endDateInput.value;
+
+            if (staffId && startDate && endDate) {
+                fetch(`check_schedule.php?staff_id=${staffId}&start_date=${startDate}&end_date=${endDate}`)
+                    .then(response => response.json())
+                    .then(data => {
+						if (data.available) {
+                        alert('The selected dates are available.You can proceed the schedule.');
+                        submitButton.disabled = false;
+                    } else {
+                        alert('The selected dates overlap with an existing schedule.Please reenter the scheduling date!');
+                        submitButton.disabled = true;
+                    }
+                })
+                .catch(error => {
+                    alert('An error occurred while checking availability. Please try again later.');
+                    console.error('Error:', error);
+                });
+            }
+        }
+
+        [staffIdInput, startedDateInput, endDateInput].forEach(input => {
+            input.addEventListener('change', checkAvailability);
+        });
+    });
+
 $('#manage_categories').submit(function(e){
     e.preventDefault();
     $('input').removeClass("border-danger");
@@ -167,4 +227,6 @@ $('#manage_categories').submit(function(e){
         }
     });
 });
+
 </script>
+

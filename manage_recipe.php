@@ -16,6 +16,7 @@
                             <th>Recipe ID</th>
                             <th>Recipe Name</th>
                             <th>Recipe Ingredient</th>
+                            <th>Equipment</th>
                             <th>Step to Bake</th>
                             <th>Action</th>
                         </tr>
@@ -31,6 +32,7 @@
                                 <td><b><?php echo $row['recipe_id']; ?></b></td>
                                 <td><b><?php echo $row['recipe_name']; ?></b></td>
                                 <td><b><?php echo $row['recipe_ing']; ?></b></td>
+                                <td><b><?php echo $row['equipment']; ?></b></td>
                                 <td><b><?php echo $row['recipe_step']; ?></b></td>
                                 <td class='text-center'>
                                     <div class='btn-group'>
@@ -75,7 +77,7 @@
             method: 'POST',
             data: { id: $id },
             success: function(resp) {
-                if (resp != 1) {
+                if (resp == 1) {
                     alert_toast('Data successfully deleted', 'success');
                     setTimeout(function() {
                         location.reload(); // Reload the page after successful deletion

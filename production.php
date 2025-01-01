@@ -20,7 +20,7 @@
                             <th>Qty Product</th>
                             <th>Staff ID (PIC)</th>
                             <th>Started Date</th>
-                            <th>Started Time</th>
+                            <th>End Date</th>
                             <th>Duration (Day)</th>
                             <th>Status</th>
                             <th>Action</th>
@@ -41,7 +41,7 @@
                             <td><b><?php echo $row['qty_product'] ?></b></td>
                             <td><b><?php echo $row['staff_id'] ?></b></td>
                             <td><b><?php echo $row['starteddate'] ?></b></td>
-                            <td><b><?php echo $row['estimationduration'] ?></b></td>
+                            <td><b><?php echo $row['enddate'] ?></b></td>
                             <td><b><?php echo $row['hours'] ?></b></td>
                             <td>
                             <b class="<?php echo ($row['status'] == 'Finished') ? 'text-success' : (($row['status'] == 'Archived') ? 'text-blue' : (($row['status'] == 'In-Progress') ? 'text-warning' : '')); ?>">

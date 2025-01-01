@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 01, 2025 at 11:52 AM
+-- Generation Time: Jan 01, 2025 at 06:28 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -81,7 +81,7 @@ CREATE TABLE `categories` (
   `staff_id` text NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `starteddate` varchar(50) NOT NULL,
-  `estimationduration` varchar(20) NOT NULL,
+  `enddate` varchar(20) NOT NULL,
   `hours` int(6) NOT NULL,
   `status` text NOT NULL,
   `comment` text NOT NULL,
@@ -92,12 +92,11 @@ CREATE TABLE `categories` (
 -- Dumping data for table `categories`
 --
 
-INSERT INTO `categories` (`id`, `product_id`, `recipe_name`, `qty_product`, `staff_id`, `created_at`, `starteddate`, `estimationduration`, `hours`, `status`, `comment`, `quality_test`) VALUES
-(104, 103, 'Almond Croissant', 50, '100001', '2024-12-27 05:26:13', '2024-12-28', '13:26', 3, 'Finished', 'DANIEL TERLALU HENSEM', 'Medium'),
-(110, 102, 'Blueberry Muffin', 9, '100003', '2024-12-28 21:03:43', '2024-12-27', '05:03', 9, 'In-Progress', '', ''),
-(112, 102, 'Banana Muffin', 30, '100002', '2025-01-01 10:15:25', '2025-01-01', '', 4, 'Unfinished', '', ''),
-(117, 103, 'Almond Croissant', 70, '100002', '2025-01-01 10:43:44', '2025-01-03', '', 9, 'Unfinished', '', ''),
-(118, 102, 'Banana Muffin', 20, '100002', '2025-01-01 10:48:49', '2024-12-13', '', 3, 'Unfinished', '', '');
+INSERT INTO `categories` (`id`, `product_id`, `recipe_name`, `qty_product`, `staff_id`, `created_at`, `starteddate`, `enddate`, `hours`, `status`, `comment`, `quality_test`) VALUES
+(124, 108, 'Pesto Pasta', 30, '100002', '2025-01-01 17:04:39', '2025-01-02', '2025-01-02', 1, 'Unfinished', '', 'Good'),
+(125, 103, 'Chocolate Croissant', 150, '100002', '2025-01-01 17:13:52', '2025-01-05', '2025-01-05', 1, 'Unfinished', '', ''),
+(126, 101, 'Red Velvet Cake', 5, '100002', '2025-01-01 17:15:53', '2025-01-03', '2025-01-03', 1, 'Unfinished', '', ''),
+(127, 107, 'Mushroom Pizza', 10, '100004', '2025-01-01 17:18:31', '2025-01-02', '2025-01-03', 2, 'Finished', '8 Over cooked 2 Well Cooked', 'Medium');
 
 -- --------------------------------------------------------
 
@@ -202,6 +201,7 @@ CREATE TABLE `receipe` (
   `recipe_name` text NOT NULL,
   `recipe_ing` text NOT NULL,
   `recipe_step` text NOT NULL,
+  `equipment` text NOT NULL,
   `product_id` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -209,31 +209,92 @@ CREATE TABLE `receipe` (
 -- Dumping data for table `receipe`
 --
 
-INSERT INTO `receipe` (`recipe_id`, `recipe_name`, `recipe_ing`, `recipe_step`, `product_id`) VALUES
-(300, 'pasta cheese', 'tepung', 'masak', 500),
-(500, 'croissant bakor', 'tepung, gula, minyak', 'goreng', 103),
-(503, 'Red Velvet Cake', 'Flour, Sugar, Cocoa powder, Buttermilk, Red food coloring', 'Preheat the oven to 180°C. In a bowl, mix the flour, sugar, and cocoa powder. Add the buttermilk, oil, and eggs, and mix well. Add the red food coloring until you achieve the desired color. Pour the batter into a greased cake pan and bake for 30 minutes. Allow to cool and frost with cream cheese frosting.', 101),
-(504, 'Carrot Victus Cake', 'Flour, Sugar, Carrots, Eggs, Butter', 'Preheat oven to 180°C. In a large bowl, whisk together flour, sugar, and spices. Add eggs, grated carrots, and melted butter. Mix until well combined. Pour batter into a greased pan and bake for 35 minutes. Allow to cool and top with cream cheese frosting.', 101),
-(505, 'Lemon Cake', 'Flour, Sugar, Lemon zest, Eggs, Butter', 'Preheat the oven to 180°C. In a bowl, cream together butter and sugar. Add eggs, one at a time, and stir in lemon zest. Gradually mix in flour and milk, alternating, until the batter is smooth. Pour into a greased tin and bake for 30 minutes. Once cool, drizzle with lemon glaze or serve plain.', 101),
-(506, 'Blueberry Muffin', 'Flour, Sugar, Blueberries, Eggs, Butter', 'Preheat oven to 180°C. In a mixing bowl, combine flour, sugar, and baking powder. Add eggs and melted butter and stir until well combined. Gently fold in fresh blueberries. Scoop batter into a muffin tin and bake for 20 minutes or until golden brown. Let cool before serving.', 102),
-(507, 'Banana Muffin', 'Flour, Sugar, Bananas, Eggs, Butter', 'Preheat oven to 180°C. Mash the bananas in a bowl until smooth. In another bowl, whisk together flour, sugar, and baking powder. Add the eggs and melted butter to the banana mixture and stir until combined. Gradually add the dry ingredients to the wet ingredients and mix until just combined. Scoop the batter into muffin tins and bake for 20 minutes. Let cool and enjoy.', 102),
-(508, 'Chocolate Chip Muffin', 'Flour, Sugar, Chocolate chips, Eggs, Butter', 'Preheat oven to 180°C. In a large bowl, combine flour, sugar, and baking soda. Add eggs and melted butter, and mix until smooth. Gently fold in chocolate chips. Spoon batter into muffin tin and bake for 20 minutes or until golden brown. Cool slightly before serving.', 102),
-(509, 'Cinnamon Muffin', 'Flour, Sugar, Cinnamon, Eggs, Butter', 'Preheat the oven to 180°C. In a bowl, mix together the dry ingredients: flour, sugar, baking powder, and cinnamon. In a separate bowl, whisk together eggs and melted butter. Combine the wet and dry ingredients and stir until smooth. Pour the batter into muffin tins and bake for 20 minutes. Sprinkle with cinnamon sugar before serving.', 102),
-(510, 'Pumpkin Muffin', 'Flour, Sugar, Pumpkin, Eggs, Butter', 'Preheat oven to 180°C. In a bowl, combine flour, sugar, baking soda, and cinnamon. In another bowl, mix together pumpkin puree, eggs, and melted butter. Gradually add the dry ingredients to the wet ingredients and mix until smooth. Spoon batter into muffin tin and bake for 20 minutes. Let cool before serving.', 102),
-(511, 'Classic Croissant', 'Flour, Butter, Yeast, Sugar, Salt', 'In a bowl, dissolve yeast in warm water with a pinch of sugar. Let it sit for 5 minutes. In another bowl, combine flour and salt. Gradually add the yeast mixture and knead the dough until smooth. Let it rise for 2 hours. Roll out the dough, fold in the butter, and refrigerate. After 30 minutes, roll the dough again, fold, and repeat. Finally, shape the croissants and bake at 200°C for 15 minutes until golden brown.', 103),
-(512, 'Almond Croissant', 'Flour, Butter, Almond paste, Sugar, Salt', 'Prepare dough as for classic croissants, but before shaping, spread a layer of almond paste in the center. Roll the dough and shape it into croissants. Let them rise for 1 hour, then bake at 200°C for 15 minutes. After baking, brush with syrup and serve warm.', 103),
-(513, 'Chocolate Croissant', 'Flour, Butter, Chocolate, Sugar, Salt', 'Follow the steps for making classic croissants, but before rolling, place a piece of chocolate inside each croissant. Shape the croissants and allow them to rise for 1 hour. Bake at 200°C for 15 minutes. Once baked, serve warm with a dusting of powdered sugar.', 103),
-(514, 'Cheese Croissant', 'Flour, Butter, Cheese, Sugar, Salt', 'Prepare dough for croissants as usual. Before rolling, add a slice of cheese in the center. Shape into croissants and let rise for 1 hour. Bake at 200°C for 15 minutes until golden and crispy. Serve warm with a light salad.', 103),
-(515, 'Ham Croissant', 'Flour, Butter, Ham, Cheese, Sugar, Salt', 'Prepare the dough for croissants. After rolling the dough, add slices of ham and cheese in the center. Shape the croissants and allow them to rise for 1 hour. Bake at 200°C for 15 minutes. Serve hot as a savory breakfast or snack.', 103),
-(516, 'White Bread', 'Flour, Yeast, Sugar, Salt, Butter', 'Combine flour, yeast, sugar, and salt in a bowl. Add warm water and mix until the dough comes together. Knead the dough for about 10 minutes until smooth. Let it rise for 1 hour. Shape the dough and let it rise again for 30 minutes. Bake at 180°C for 25 minutes until golden brown and hollow when tapped.', 104),
-(517, 'Whole Wheat Bread', 'Whole wheat flour, Yeast, Sugar, Salt, Butter', 'Combine whole wheat flour, yeast, sugar, and salt in a bowl. Gradually add warm water and knead the dough for 10 minutes. Let the dough rise for 1 hour, then punch it down. Shape the dough into a loaf and let it rise again for 30 minutes. Bake at 180°C for 25 minutes or until the loaf sounds hollow when tapped.', 104),
-(518, 'Sourdough Bread', 'Flour, Water, Yeast, Salt', 'Mix flour and water to form a dough. Add a small amount of yeast and salt. Knead the dough for 10 minutes and let it rise overnight. Punch the dough down, then shape it into a loaf and let it rise for several hours. Bake at 200°C for 30 minutes until crusty and golden.', 104),
-(519, 'Rye Bread', 'Rye flour, Yeast, Sugar, Salt, Butter', 'Combine rye flour, yeast, sugar, and salt in a bowl. Gradually add water and knead the dough. Let the dough rise for 1 hour, then punch it down. Shape into a loaf and allow it to rise for 30 minutes. Bake at 180°C for 25 minutes until golden and firm.', 104),
-(520, 'Multigrain Bread', 'Flour, Mixed grains, Yeast, Sugar, Salt, Butter', 'Combine flour and mixed grains in a bowl. Add yeast, sugar, salt, and warm water. Knead the dough until smooth. Let it rise for 1 hour, then punch it down and shape it. Let the dough rise again before baking at 180°C for 25 minutes until golden brown and crusty.', 104),
-(622, 'efa', 'efaf', 'fqe', 103),
-(632, 'hbf', 'srg', 'sfw', 104),
-(710, 'Cake Taik', 'wdac', 'efsdv', 101),
-(910, 'Fiz', 'gsdf', 'rgdsfvd', 104);
+INSERT INTO `receipe` (`recipe_id`, `recipe_name`, `recipe_ing`, `recipe_step`, `equipment`, `product_id`) VALUES
+(500, 'Classic Vanilla Cake', '1. Flour\r\n2. Sugar\r\n3. Eggs\r\n4. Butter', '1. Preheat oven\r\n2. Mix ingredients\r\n3. Bake for 30 minutes', 'Oven', 101),
+(501, 'Chocolate Cake', '1. Cocoa powder\n2. Flour\n3. Sugar\n4. Butter', '1. Preheat oven\n2. Mix ingredients\n3. Bake for 25 minutes', 'Oven', 101),
+(502, 'Red Velvet Cake', '1. Flour\n2. Cocoa powder\n3. Sugar\n4. Buttermilk', '1. Preheat oven\n2. Mix ingredients\n3. Bake for 30 minutes', 'Oven', 101),
+(503, 'Lemon Cake', '1. Flour\n2. Sugar\n3. Lemons\n4. Butter', '1. Preheat oven\n2. Mix ingredients\n3. Bake for 30 minutes', 'Oven', 101),
+(504, 'Carrot Cake', '1. Carrots\n2. Flour\n3. Sugar\n4. Butter', '1. Preheat oven\n2. Mix ingredients\n3. Bake for 40 minutes', 'Oven', 101),
+(505, 'Cheesecake', '1. Cream cheese\n2. Sugar\n3. Eggs\n4. Biscuit base', '1. Prepare crust\n2. Mix filling\n3. Bake for 50 minutes', 'Oven', 101),
+(506, 'Pineapple Upside-Down Cake', '1. Pineapples\n2. Flour\n3. Sugar\n4. Butter', '1. Preheat oven\n2. Arrange pineapples\n3. Mix batter and bake', 'Oven', 101),
+(507, 'Black Forest Cake', '1. Cocoa powder\n2. Cherries\n3. Sugar\n4. Whipped cream', '1. Bake layers\n2. Layer with cherries and cream\n3. Decorate', 'Oven', 101),
+(508, 'Fruit Cake', '1. Dried fruits\n2. Flour\n3. Sugar\n4. Butter', '1. Preheat oven\n2. Mix ingredients\n3. Bake for 50 minutes', 'Oven', 101),
+(509, 'Coffee Cake', '1. Coffee\n2. Flour\n3. Sugar\n4. Butter', '1. Preheat oven\n2. Mix ingredients\n3. Bake for 30 minutes', 'Oven', 101),
+(510, 'Blueberry Muffin', '1. Flour\n2. Sugar\n3. Blueberries\n4. Butter', '1. Preheat oven\n2. Mix ingredients\n3. Bake for 20 minutes', 'Oven', 102),
+(511, 'Banana Muffin', '1. Flour\n2. Sugar\n3. Bananas\n4. Butter', '1. Preheat oven\n2. Mix ingredients\n3. Bake for 20 minutes', 'Oven', 102),
+(512, 'Chocolate Chip Muffin', '1. Flour\n2. Sugar\n3. Chocolate chips\n4. Butter', '1. Preheat oven\n2. Mix ingredients\n3. Bake for 20 minutes', 'Oven', 102),
+(513, 'Apple Cinnamon Muffin', '1. Apples\n2. Flour\n3. Sugar\n4. Cinnamon', '1. Preheat oven\n2. Mix ingredients\n3. Bake for 20 minutes', 'Oven', 102),
+(514, 'Raspberry Muffin', '1. Raspberries\n2. Flour\n3. Sugar\n4. Butter', '1. Preheat oven\n2. Mix ingredients\n3. Bake for 20 minutes', 'Oven', 102),
+(515, 'Corn Muffin', '1. Cornmeal\n2. Flour\n3. Sugar\n4. Butter', '1. Preheat oven\n2. Mix ingredients\n3. Bake for 20 minutes', 'Oven', 102),
+(516, 'Pumpkin Muffin', '1. Pumpkin puree\n2. Flour\n3. Sugar\n4. Butter', '1. Preheat oven\n2. Mix ingredients\n3. Bake for 20 minutes', 'Oven', 102),
+(517, 'Lemon Poppy Seed Muffin', '1. Lemon zest\n2. Flour\n3. Sugar\n4. Poppy seeds', '1. Preheat oven\n2. Mix ingredients\n3. Bake for 20 minutes', 'Oven', 102),
+(518, 'Carrot Muffin', '1. Carrots\n2. Flour\n3. Sugar\n4. Butter', '1. Preheat oven\n2. Mix ingredients\n3. Bake for 20 minutes', 'Oven', 102),
+(519, 'Zucchini Muffin', '1. Zucchini\n2. Flour\n3. Sugar\n4. Butter', '1. Preheat oven\n2. Mix ingredients\n3. Bake for 20 minutes', 'Oven', 102),
+(520, 'Classic Butter Croissant', '1. Flour\n2. Butter\n3. Yeast\n4. Salt', '1. Knead dough\n2. Fold with butter\n3. Bake for 15 minutes', 'Oven', 103),
+(521, 'Chocolate Croissant', '1. Flour\n2. Butter\n3. Chocolate\n4. Yeast', '1. Knead dough\n2. Fill with chocolate\n3. Bake for 15 minutes', 'Oven', 103),
+(522, 'Almond Croissant', '1. Flour\n2. Butter\n3. Almond paste\n4. Yeast', '1. Knead dough\n2. Fill with almond paste\n3. Bake for 15 minutes', 'Oven', 103),
+(523, 'Cheese Croissant', '1. Flour\n2. Butter\n3. Cheese\n4. Yeast', '1. Knead dough\n2. Fill with cheese\n3. Bake for 15 minutes', 'Oven', 103),
+(524, 'Ham and Cheese Croissant', '1. Flour\n2. Butter\n3. Ham\n4. Cheese', '1. Knead dough\n2. Add ham and cheese\n3. Bake for 15 minutes', 'Oven', 103),
+(525, 'Spinach Croissant', '1. Flour\n2. Butter\n3. Spinach\n4. Yeast', '1. Knead dough\n2. Fill with spinach\n3. Bake for 15 minutes', 'Oven', 103),
+(526, 'Pesto Croissant', '1. Flour\n2. Butter\n3. Pesto\n4. Yeast', '1. Knead dough\n2. Fill with pesto\n3. Bake for 15 minutes', 'Oven', 103),
+(527, 'Raspberry Croissant', '1. Flour\n2. Butter\n3. Raspberry jam\n4. Yeast', '1. Knead dough\n2. Fill with raspberry jam\n3. Bake for 15 minutes', 'Oven', 103),
+(528, 'Nutella Croissant', '1. Flour\n2. Butter\n3. Nutella\n4. Yeast', '1. Knead dough\n2. Fill with Nutella\n3. Bake for 15 minutes', 'Oven', 103),
+(529, 'Honey Croissant', '1. Flour\n2. Butter\n3. Honey\n4. Yeast', '1. Knead dough\n2. Glaze with honey\n3. Bake for 15 minutes', 'Oven', 103),
+(532, 'Sourdough Bread', '1. Flour\n2. Water\n3. Salt\n4. Starter', '1. Mix ingredients\n2. Ferment overnight\n3. Bake for 45 minutes', 'Oven', 104),
+(533, 'Rye Bread', '1. Rye flour\n2. Water\n3. Yeast\n4. Salt', '1. Knead dough\n2. Let rise\n3. Bake for 40 minutes', 'Oven', 104),
+(534, 'French Baguette', '1. Flour\n2. Water\n3. Yeast\n4. Salt', '1. Shape dough\n2. Let rise\n3. Bake for 25 minutes', 'Oven', 104),
+(535, 'Ciabatta', '1. Flour\n2. Water\n3. Yeast\n4. Olive oil', '1. Knead dough\n2. Let rise\n3. Bake for 30 minutes', 'Oven', 104),
+(536, 'Brioche', '1. Flour\n2. Eggs\n3. Butter\n4. Yeast', '1. Knead dough\n2. Let rise\n3. Bake for 35 minutes', 'Oven', 104),
+(537, 'Focaccia', '1. Flour\n2. Olive oil\n3. Salt\n4. Rosemary', '1. Knead dough\n2. Top with rosemary\n3. Bake for 20 minutes', 'Oven', 104),
+(538, 'Multigrain Bread', '1. Whole grain flour\n2. Seeds\n3. Yeast\n4. Salt', '1. Mix ingredients\n2. Let rise\n3. Bake for 40 minutes', 'Oven', 104),
+(539, 'Pita Bread', '1. Flour\n2. Water\n3. Yeast\n4. Salt', '1. Knead dough\n2. Let rise\n3. Bake for 10 minutes', 'Oven', 104),
+(540, 'Garlic Naan', '1. Flour\n2. Garlic\n3. Yogurt\n4. Yeast', '1. Mix ingredients\n2. Cook on stovetop', 'Stove', 104),
+(541, 'Onion Bread', '1. Flour\n2. Onion\n3. Yeast\n4. Salt', '1. Mix ingredients\n2. Let rise\n3. Bake for 35 minutes', 'Oven', 104),
+(542, 'Grape Juice', '1. Grapes\n2. Sugar\n3. Water', '1. Blend grapes\n2. Strain\n3. Add sugar and water', 'Blender', 105),
+(543, 'Pineapple Juice', '1. Pineapple\n2. Sugar\n3. Water', '1. Blend pineapple\n2. Strain\n3. Add sugar and water', 'Blender', 105),
+(544, 'Watermelon Juice', '1. Watermelon\n2. Sugar\n3. Ice', '1. Blend watermelon\n2. Strain\n3. Add sugar and serve', 'Blender', 105),
+(545, 'Mango Juice', '1. Mangoes\n2. Sugar\n3. Water', '1. Blend mangoes\n2. Add sugar and water\n3. Stir well', 'Blender', 105),
+(546, 'Guava Juice', '1. Guavas\n2. Sugar\n3. Water', '1. Blend guavas\n2. Strain\n3. Add sugar and water', 'Blender', 105),
+(547, 'Carrot Juice', '1. Carrots\r\n2. Sugar\r\n3. Water', '1. Blend carrots\r\n2. Strain\r\n3. Add sugar and water', 'Juicer', 105),
+(548, 'Lemonade', '1. Lemons\n2. Sugar\n3. Water', '1. Squeeze lemons\n2. Add sugar and water\n3. Stir well', 'Juicer', 105),
+(549, 'Pomegranate Juice', '1. Pomegranates\n2. Sugar\n3. Water', '1. Extract juice\n2. Add sugar and water\n3. Stir well', 'Juicer', 105),
+(550, 'Strawberry Juice', '1. Strawberries\n2. Sugar\n3. Water', '1. Blend strawberries\n2. Strain\n3. Add sugar and water', 'Blender', 105),
+(551, 'Cranberry Juice', '1. Cranberries\n2. Sugar\n3. Water', '1. Blend cranberries\n2. Strain\n3. Add sugar and water', 'Blender', 105),
+(552, 'Vitamin Water', '1. Filtered water\n2. Vitamins\n3. Flavoring', '1. Filter water\n2. Add vitamins and flavor\n3. Package', 'Filter', 106),
+(553, 'Electrolyte Water', '1. Filtered water\n2. Electrolytes', '1. Filter water\n2. Add electrolytes\n3. Package', 'Filter', 106),
+(554, 'Herbal Infused Water', '1. Filtered water\n2. Herbs', '1. Filter water\n2. Add herbs\n3. Package', 'Infuser', 106),
+(555, 'Lemon Infused Water', '1. Filtered water\n2. Lemon slices', '1. Filter water\n2. Add lemon slices\n3. Package', 'Infuser', 106),
+(556, 'Cucumber Infused Water', '1. Filtered water\n2. Cucumber slices', '1. Filter water\n2. Add cucumber slices\n3. Package', 'Infuser', 106),
+(557, 'Mint Infused Water', '1. Filtered water\n2. Mint leaves', '1. Filter water\n2. Add mint leaves\n3. Package', 'Infuser', 106),
+(558, 'Fruit Infused Water', '1. Filtered water\n2. Mixed fruits', '1. Filter water\n2. Add fruits\n3. Package', 'Infuser', 106),
+(559, 'Sparkling Citrus Water', '1. Sparkling water\n2. Citrus zest', '1. Prepare sparkling water\n2. Add citrus zest\n3. Package', 'Carbonator', 106),
+(560, 'Berry Infused Water', '1. Filtered water\n2. Berries', '1. Filter water\n2. Add berries\n3. Package', 'Infuser', 106),
+(561, 'Rose Infused Water', '1. Filtered water\n2. Rose petals', '1. Filter water\n2. Add rose petals\n3. Package', 'Infuser', 106),
+(562, 'Veggie Pizza', '1. Dough\n2. Tomato sauce\n3. Cheese\n4. Mixed vegetables', '1. Prepare dough\n2. Add toppings\n3. Bake for 15 minutes', 'Oven', 107),
+(563, 'BBQ Chicken Pizza', '1. Dough\n2. BBQ sauce\n3. Cheese\n4. Chicken', '1. Prepare dough\n2. Add toppings\n3. Bake for 15 minutes', 'Oven', 107),
+(564, 'Hawaiian Pizza', '1. Dough\n2. Tomato sauce\n3. Cheese\n4. Pineapple and ham', '1. Prepare dough\n2. Add toppings\n3. Bake for 15 minutes', 'Oven', 107),
+(565, 'Buffalo Chicken Pizza', '1. Dough\n2. Buffalo sauce\n3. Cheese\n4. Chicken', '1. Prepare dough\n2. Add toppings\n3. Bake for 15 minutes', 'Oven', 107),
+(566, 'White Sauce Pizza', '1. Dough\n2. White sauce\n3. Cheese\n4. Spinach', '1. Prepare dough\n2. Add toppings\n3. Bake for 15 minutes', 'Oven', 107),
+(567, 'Mushroom Pizza', '1. Dough\n2. Tomato sauce\n3. Cheese\n4. Mushrooms', '1. Prepare dough\n2. Add toppings\n3. Bake for 15 minutes', 'Oven', 107),
+(568, 'Four Cheese Pizza', '1. Dough\n2. Tomato sauce\n3. Mozzarella\n4. Parmesan\n5. Blue cheese\n6. Cheddar', '1. Prepare dough\n2. Add toppings\n3. Bake for 15 minutes', 'Oven', 107),
+(569, 'Spinach and Feta Pizza', '1. Dough\n2. Tomato sauce\n3. Cheese\n4. Spinach and feta', '1. Prepare dough\n2. Add toppings\n3. Bake for 15 minutes', 'Oven', 107),
+(570, 'Sausage Pizza', '1. Dough\n2. Tomato sauce\n3. Cheese\n4. Sausage', '1. Prepare dough\n2. Add toppings\n3. Bake for 15 minutes', 'Oven', 107),
+(571, 'Seafood Pizza', '1. Dough\n2. Tomato sauce\n3. Cheese\n4. Mixed seafood', '1. Prepare dough\n2. Add toppings\n3. Bake for 15 minutes', 'Oven', 107),
+(572, 'Fettuccine Alfredo', '1. Fettuccine\n2. Cream\n3. Cheese\n4. Butter', '1. Boil pasta\n2. Prepare sauce\n3. Mix and serve', 'Stove', 108),
+(573, 'Pasta Carbonara', '1. Spaghetti\n2. Eggs\n3. Cheese\n4. Bacon', '1. Boil pasta\n2. Cook bacon\n3. Mix with eggs and cheese\n4. Serve', 'Stove', 108),
+(574, 'Pesto Pasta', '1. Pasta\n2. Basil\n3. Garlic\n4. Parmesan', '1. Boil pasta\n2. Blend pesto\n3. Mix and serve', 'Stove', 108),
+(575, 'Lasagna', '1. Lasagna sheets\n2. Tomato sauce\n3. Cheese\n4. Minced meat', '1. Layer ingredients\n2. Bake for 30 minutes', 'Oven', 108),
+(576, 'Mac and Cheese', '1. Macaroni\n2. Cheese\n3. Milk\n4. Butter', '1. Boil pasta\n2. Prepare sauce\n3. Mix and bake', 'Stove', 108),
+(580, 'Fettuccine Carbonara', '1. Fettuccine\r\n2. Egg yolks\r\n3. Parmesan cheese\r\n4. Pancetta', '1. Cook pasta\r\n2. Prepare sauce with pancetta and egg yolks\r\n3. Mix pasta with sauce and serve', 'Stove', 108),
+(581, 'Mac and Cheese', '1. Macaroni\r\n2. Cheese\r\n3. Milk\r\n4. Butter', '1. Boil macaroni\r\n2. Prepare cheese sauce\r\n3. Mix macaroni with sauce and serve', 'Stove', 108),
+(582, 'Pesto Pasta', '1. Pasta of choice\r\n2. Basil\r\n3. Garlic\r\n4. Olive oil', '1. Cook pasta\r\n2. Blend basil, garlic, and olive oil into pesto\r\n3. Mix pasta with pesto and serve', 'Blender', 108),
+(583, 'Linguine with Clam Sauce', '1. Linguine\r\n2. Clams\r\n3. Garlic\r\n4. White wine', '1. Cook pasta\r\n2. Prepare clam sauce with garlic and wine\r\n3. Combine pasta with sauce and serve', 'Stove', 108),
+(584, 'Spaghetti Aglio e Olio', '1. Spaghetti\r\n2. Garlic\r\n3. Olive oil\r\n4. Red chili flakes', '1. Boil spaghetti\r\n2. Sauté garlic in olive oil\r\n3. Toss spaghetti with garlic oil and serve', 'Stove', 108),
+(585, 'Vegetarian Lasagna', '1. Lasagna noodles\r\n2. Tomato sauce\r\n3. Ricotta cheese\r\n4. Vegetables', '1. Layer noodles, sauce, and vegetables\r\n2. Bake for 40 minutes\r\n3. Serve hot', 'Oven', 108),
+(586, 'Seafood Alfredo', '1. Pasta of choice\r\n2. Cream\r\n3. Shrimp and scallops\r\n4. Parmesan cheese', '1. Cook pasta\r\n2. Prepare Alfredo sauce with seafood\r\n3. Combine pasta with sauce and serve', 'Stove', 108),
+(587, 'Pasta Primavera', '1. Pasta of choice\r\n2. Mixed vegetables\r\n3. Olive oil\r\n4. Parmesan cheese', '1. Cook pasta\r\n2. Sauté vegetables\r\n3. Toss pasta with vegetables and serve', 'Stove', 108),
+(588, 'Baked Ziti', '1. Ziti pasta\r\n2. Tomato sauce\r\n3. Mozzarella cheese\r\n4. Ricotta cheese', '1. Boil pasta\r\n2. Layer pasta, sauce, and cheeses\r\n3. Bake for 25 minutes and serve', 'Oven', 108),
+(589, 'Penne Arrabbiata', '1. Penne\r\n2. Tomato sauce\r\n3. Garlic\r\n4. Red chili peppers', '1. Cook penne\r\n2. Prepare spicy tomato sauce\r\n3. Mix penne with sauce and serve', 'Stove', 108);
 
 -- --------------------------------------------------------
 
@@ -308,8 +369,8 @@ INSERT INTO `typeproduct` (`product_id`, `product_name`) VALUES
 (104, 'Bread'),
 (105, 'Juice'),
 (106, 'Drinking Water'),
-(150, 'PIZZA'),
-(500, 'pasta');
+(107, 'Pizza'),
+(108, 'pasta');
 
 -- --------------------------------------------------------
 
@@ -335,11 +396,9 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `fullname`, `contact`, `address`, `email`, `password`, `type`, `date_created`, `staff_id`) VALUES
 (1, 'Administrator', '+123456789', 'Sample address', 'admin@admin.com', '21232f297a57a5a743894a0e4a801fc3', 1, '2020-11-10 08:43:06', 0),
-(21, 'MUHAMMAD DANIEL HAIKAL BIN WAZI', '', '', 'danielhkl118@gmail.com', 'cdffdceff32344176683f363ec285e54', 2, '2024-12-16 17:29:45', 0),
-(26, 'miruk', '', '', 'ztebqlux@gmail.com', '81dc9bdb52d04dc20036dbd8313ed055', 3, '2024-12-26 13:45:57', 0),
 (79, 'Adib', '', '', 'ztebqlux@gmail.com', '25f9e794323b453885f5181f1b624d0b', 3, '2024-12-29 04:51:27', 100001),
 (80, 'Halim', '', '', 'ztebqlux@gmail.com', 'e13dd027be0f2152ce387ac0ea83d863', 3, '2024-12-29 04:52:22', 100002),
-(81, 'Syah', '', '', 'ztebqlux@gmail.com', 'e82c4b19b8151ddc25d4d93baf7b908f', 2, '2024-12-29 04:53:08', 100005),
+(81, 'Ahza', '', '', 'ztebqlux@gmail.com', 'e82c4b19b8151ddc25d4d93baf7b908f', 2, '2024-12-29 04:53:08', 100005),
 (83, 'Najmi', '', '', 'ztebqlux@gmail.com', '9519bc1bbb643029053f051d004ce283', 3, '2024-12-29 04:55:17', 100004),
 (88, 'mirul', '', '', 'danielhkl118@gmail.com', 'cdffdceff32344176683f363ec285e54', 3, '2024-12-29 15:31:17', 100003);
 
@@ -422,7 +481,7 @@ ALTER TABLE `answers`
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=119;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=128;
 
 --
 -- AUTO_INCREMENT for table `contact`

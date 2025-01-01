@@ -27,7 +27,8 @@ $staff_id1 = $_SESSION['login_staff_id'];
                         <tr>
                             <th class="text-center">No</th>
                             <th>Batch ID</th>
-                            <th>Started Date</th>
+                            <th class="text-center" style="width: 10%;">Started Date</th>
+                            <th class="text-center" style="width: 10%;">End Date</th>
                             <th>Recipe Name</th>
                             <th class="text-center" style="width: 15%;">Quality (Status)</th>
                             <th class="text-center" style="width: 15%;">Status</th>
@@ -71,6 +72,7 @@ $staff_id1 = $_SESSION['login_staff_id'];
                             <th class="text-center"><?php echo $i++; ?></th>
                             <td><b><?php echo $row['id']; ?></b></td>
                             <td><b><?php echo $row['starteddate']; ?></b></td>
+                            <td><b><?php echo $row['enddate']; ?></b></td>
                             <td><b><?php echo ucwords($row['recipe_name']); ?></b></td>
                             <td class="text-center">
                                 <button type="button" class="btn <?php echo $qualityBtnClass; ?> btn-sm btn-flat wave-effect dropdown-toggle" 
@@ -157,14 +159,35 @@ $(document).ready(function () {
     // Show comment modal
     $(document).on('click', '.insert_comment', function () {
         var id = $(this).data('id');
+        
+        // Clear previous modal content
+        $('#comment-id').val('');
+        $('#comment-text').val('');
+
+        // Set the current comment ID
         $('#comment-id').val(id);
+
+        // Show the modal
+        $('#uni_modal .modal-title').text('Insert Additional Comment');
+        $('#uni_modal .modal-body').html(`
+            <form id="comment-form">
+                <input type="hidden" name="id" id="comment-id" value="${id}">
+                <div class="form-group">
+                    <label for="comment-text">Comment:</label>
+                    <textarea name="comment" id="comment-text" class="form-control" rows="5" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        `);
+
         $('#uni_modal').modal('show');
     });
 
     // Handle comment submission
-    $('#comment-form').submit(function (e) {
+    $(document).on('submit', '#comment-form', function (e) {
         e.preventDefault();
         var data = $(this).serialize();
+
         $.ajax({
             url: 'ajax.php?action=save_comment',
             method: 'POST',
