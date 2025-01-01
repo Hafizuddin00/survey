@@ -14,7 +14,7 @@
     /* Sidebar itself */
     .sidebar {
         height: 100%;
-        border-top-right-radius: 50px !important; /* Match the radius for consistency */
+        border-top-right-radius: 0x !important; /* Match the radius for consistency */
         border-bottom-right-radius: 50px !important;
     }
 </style>

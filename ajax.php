@@ -50,6 +50,18 @@ if($action == 'update_status'){
 		echo $save;
 }
 
+if($action == 'update_quality'){
+	$save = $crud->update_quality();
+	if($save)
+		echo $save;
+}
+
+if($action == 'save_comment'){
+	$save = $crud->save_comment();
+	if($save)
+		echo $save;
+}
+
 if($action == 'delete_all_data'){
 	$save = $crud->delete_all_data();
 	if($save)

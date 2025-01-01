@@ -21,7 +21,7 @@
                             <th>Staff ID (PIC)</th>
                             <th>Started Date</th>
                             <th>Started Time</th>
-                            <th>Duration (Hours)</th>
+                            <th>Duration (Day)</th>
                             <th>Status</th>
                             <th>Action</th>
                             

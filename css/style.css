@@ -329,7 +329,30 @@ background: #000;
 i.glyphicon.glyphicon-menu-right {
     padding-left: 15px;
     vertical-align: middle;
-}/*
+	border: none;
+    border-radius: 50px;
+    transition: background-color 0.3s ease;
+}
+
+
+.readmore a.rounded-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #000; /* Change to your desired button color */
+    color: #fff; /* Text color */
+    text-decoration: none;
+    border: none;
+    border-radius: 50px; /* Creates heavily rounded corners */
+    transition: background-color 0.3s ease;
+}
+
+.readmore a.rounded-button:hover {
+    background-color: #494b4d; /* Darker shade for hover effect */
+}
+
+/*
+
+
 .readmore:hover .rslides a, i.glyphicon.glyphicon-menu-right {
 	color:#fff;
 	 background-color: #36454F;
