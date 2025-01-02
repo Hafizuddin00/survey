@@ -89,7 +89,7 @@
 			method:'POST',
 			data:{id:$id},
 			success:function(resp){
-				if(resp!=1){
+				if(resp==1){
 					alert_toast("Categories successfully deleted",'success')
 					setTimeout(function(){
 						location.reload()
@@ -117,7 +117,7 @@
                 method: 'POST',
                 
                 success: function (resp) {
-                    if (resp != 1) {
+                    if (resp == 1) {
                         alert_toast("All records with 'Finished' status successfully deleted", 'success');
                         setTimeout(function () {
                             location.reload();
