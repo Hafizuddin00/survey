@@ -116,6 +116,20 @@ if($action == "update_user"){
 	if($save)
 		echo $save;
 }
+if ($_GET['action'] == 'delete_product') {
+    include 'db_connect.php'; // Ensure database connection
+
+    $product_id = $_POST['product_id'];
+
+    // Perform the deletion
+    $delete = $conn->query("DELETE FROM typeproduct WHERE product_id = '$product_id'");
+    if ($delete) {
+        echo 1; // Success
+    } else {
+        echo 0; // Failed
+    }
+    exit();
+}
 if ($action == 'insert_recipe') {
     // Insert new recipe
     $stmt = $conn->prepare("INSERT INTO receipe (recipe_id, product_id, recipe_name, recipe_ing, equipment, recipe_step) VALUES (?, ?, ?, ?, ?, ?)");
