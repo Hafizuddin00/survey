@@ -4,6 +4,7 @@
         <div class="card-header">
             <a class="btn btn-sm btn-primary btn-flat" href="./index.php?page=new_recipe"><i class="fa fa-plus"></i> Add New Recipe</a>
             <a class="btn btn-sm btn-warning btn-flat" href="./index.php?page=new_product"><i class="fa fa-plus"></i> Add New Product</a>
+            <a class="btn btn-sm btn-danger btn-flat" href="./index.php?page=delete_product"><i class="fa fa-minus"></i> Delete product</a>
             <div class="card-tools"></div>
         </div>
         <div class="card-body p-3">
