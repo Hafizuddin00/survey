@@ -130,26 +130,36 @@ if ($_GET['action'] == 'delete_product') {
     }
     exit();
 }
-if ($action == 'insert_recipe') {
-    // Insert new recipe
-    $stmt = $conn->prepare("INSERT INTO receipe (recipe_id, product_id, recipe_name, recipe_ing, equipment, recipe_step) VALUES (?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("iissss", $_POST['recipe_id'], $_POST['product_id'], $_POST['recipe_name'], $_POST['recipe_ing'], $_POST['equipment'], $_POST['recipe_step']);
-    $stmt->execute();
-    if ($stmt->affected_rows > 0) {
-        echo 0;  // Success
+if ($_GET['action'] == 'save_recipe') {
+    $data = json_decode(file_get_contents("php://input"), true);
+
+    $id = $data['id'];
+    $recipe_id = $data['recipe_id'];
+    $product_id = $data['product_id'];
+    $recipe_name = $data['recipe_name'];
+    $equipment = $data['equipment'];
+    $recipe_step = $data['recipe_step'];
+    $ingredients = $data['ingredients'];
+
+    if ($id) {
+        $update = $conn->query("UPDATE receipe SET recipe_id='$recipe_id', product_id='$product_id', recipe_name='$recipe_name', equipment='$equipment', recipe_step='$recipe_step' WHERE id='$id'");
+        if (!$update) die(json_encode(['error' => $conn->error]));
     } else {
-        echo 1;  // Failure
+        $insert = $conn->query("INSERT INTO receipe (recipe_id, product_id, recipe_name, equipment, recipe_step) VALUES ('$recipe_id', '$product_id', '$recipe_name', '$equipment', '$recipe_step')");
+        if (!$insert) die(json_encode(['error' => $conn->error]));
+        $id = $conn->insert_id;
     }
-} elseif ($action == 'update_recipe') {
-    // Update existing recipe
-    $stmt = $conn->prepare("UPDATE receipe SET product_id = ?, recipe_name = ?, recipe_ing = ?, equipment = ?, recipe_step = ? WHERE recipe_id = ?");
-    $stmt->bind_param("issssi", $_POST['product_id'], $_POST['recipe_name'], $_POST['recipe_ing'], $_POST['equipment'], $_POST['recipe_step'], $_POST['recipe_id']);
-    $stmt->execute();
-    if ($stmt->affected_rows > 0) {
-        echo 0;  // Success
-    } else {
-        echo 1;  // Failure
+
+    $conn->query("DELETE FROM ing_list WHERE recipe_id='$recipe_id'");
+    foreach ($ingredients as $ingredient) {
+        $ing_type = $conn->real_escape_string($ingredient['ingredient']);
+        $ing_mass = $conn->real_escape_string($ingredient['qty']);
+        $conn->query("INSERT INTO ing_list (recipe_id, ing_type, ing_mass) VALUES ('$recipe_id', '$ing_type', '$ing_mass')");
     }
+
+    echo 1;
 }
+
+
 ob_end_flush();
 ?>
