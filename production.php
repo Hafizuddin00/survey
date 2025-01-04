@@ -1,16 +1,5 @@
 <?php include 'db_connect.php' ?>
 <div class="col-lg-12">
-<<<<<<< HEAD
-    <div class="card card-outline card-success">
-        <div class="card-header">
-            <a class="btn btn-sm btn-warning btn-flat" href="./index.php?page=present_timetable"><i class="fa fa-table"></i> Timetable</a>
-            <a class="btn btn btn-sm btn-pr .imary btn-flat" href="./index.php?page=schedule_production"><i class="fa fa-plus"></i> Schedule Production</a>
-            <a class="btn btn-sm btn-danger btn-flat" href="javascript:void(0)" id="delete_all_data"><i class="fa fa-trash"></i> Delete All Record</a>
-            <div class="card-tools">
-            </div>
-        </div>
-        <div class="card-body p-3"> <!-- Add padding for spacing -->
-=======
 	<div class="card card-outline card-success">
 		<div class="card-header">
         <a class="btn btn btn-sm btn-warning btn-flat" href="./index.php?page=present_timetable"><i class="fa fa-table"></i> Timetable</a>
@@ -22,7 +11,6 @@
 			</div>
 		</div>
 		<div class="card-body p-3"> <!-- Add padding for spacing -->
->>>>>>> 463a9c39449f2821df4916c35759226f12dfeb1f
             <div class="table-responsive">
                 <table class="table table-hover table-bordered" id="list">
                     <thead>
