@@ -2,7 +2,7 @@
 <div class="col-lg-12">
 	<div class="card card-outline card-success">
 		<div class="card-header">
-        <a class="btn btn btn-sm btn-danger btn-flat" href="./index.php?page=present_timetable"><i class="fa fa-timetable"></i> Timetable</a>
+        <a class="btn btn btn-sm btn-warning btn-flat" href="./index.php?page=present_timetable"><i class="fa fa-table"></i> Timetable</a>
 		<a class="btn btn btn-sm btn-primary btn-flat" href="./index.php?page=schedule_production"><i class="fa fa-plus"></i> Schedule Production</a>
         <a class="btn btn-sm btn-danger btn-flat" href="javascript:void(0)" id="delete_all_data">
         <i class="fa fa-trash"></i> Delete All Record
