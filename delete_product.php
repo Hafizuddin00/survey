@@ -11,7 +11,7 @@ if (!isset($conn)) {
             <form action="" id="delete_product">
                 <div class="form-group">
                     <label for="product_id">Product ID *</label>
-                    <select name="product_id" id="product_id" class="form-control form-control-sm" required="true">
+                    <select name="product_id" id="product_id" class="form-control form-control-sm" style = "width : 500px" required="true">
                         <option value="">Select Product ID</option>
                         <?php
                         // Fetch Product IDs from the typeproduct table

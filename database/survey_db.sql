@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 01, 2025 at 06:28 PM
+-- Generation Time: Jan 12, 2025 at 09:35 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -74,6 +74,7 @@ INSERT INTO `answers` (`id`, `survey_id`, `user_id`, `answer`, `question_id`, `d
 --
 
 CREATE TABLE `categories` (
+  `order_id` int(11) NOT NULL,
   `id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
   `recipe_name` varchar(255) NOT NULL,
@@ -84,19 +85,18 @@ CREATE TABLE `categories` (
   `enddate` varchar(20) NOT NULL,
   `hours` int(6) NOT NULL,
   `status` text NOT NULL,
+  `quality_test` text NOT NULL,
   `comment` text NOT NULL,
-  `quality_test` text NOT NULL
+  `ingredients_data` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `categories`
 --
 
-INSERT INTO `categories` (`id`, `product_id`, `recipe_name`, `qty_product`, `staff_id`, `created_at`, `starteddate`, `enddate`, `hours`, `status`, `comment`, `quality_test`) VALUES
-(124, 108, 'Pesto Pasta', 30, '100002', '2025-01-01 17:04:39', '2025-01-02', '2025-01-02', 1, 'Unfinished', '', 'Good'),
-(125, 103, 'Chocolate Croissant', 150, '100002', '2025-01-01 17:13:52', '2025-01-05', '2025-01-05', 1, 'Unfinished', '', ''),
-(126, 101, 'Red Velvet Cake', 5, '100002', '2025-01-01 17:15:53', '2025-01-03', '2025-01-03', 1, 'Unfinished', '', ''),
-(127, 107, 'Mushroom Pizza', 10, '100004', '2025-01-01 17:18:31', '2025-01-02', '2025-01-03', 2, 'Finished', '8 Over cooked 2 Well Cooked', 'Medium');
+INSERT INTO `categories` (`order_id`, `id`, `product_id`, `recipe_name`, `qty_product`, `staff_id`, `created_at`, `starteddate`, `enddate`, `hours`, `status`, `quality_test`, `comment`, `ingredients_data`) VALUES
+(12, 205, 103, 'Fix Croissant', 10, '100003', '2025-01-12 20:12:19', '2025-01-13', '2025-01-14', 2, 'Unfinished', '', '', '[\"Flour - 5 kg\",\"Egg - 20 unit\"]'),
+(0, 206, 103, 'Fix Croissant', 11, '100002', '2025-01-12 20:26:10', '2025-01-13', '2025-01-14', 0, 'Unfinished', '', '', '[\"Flour - 5.5 kg\",\"Egg - 22 unit\"]');
 
 -- --------------------------------------------------------
 
@@ -118,6 +118,212 @@ CREATE TABLE `contact` (
 
 INSERT INTO `contact` (`ID`, `Name`, `Email`, `Message`, `created_at`) VALUES
 (8, 'Thilo', 'thiloshinii99@gmail.com', 'Test2', '2023-02-23 10:34:22');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `equipment_details`
+--
+
+CREATE TABLE `equipment_details` (
+  `spec_id` varchar(11) NOT NULL,
+  `eq_id` varchar(11) NOT NULL,
+  `eq_description` text NOT NULL,
+  `qty` int(11) NOT NULL,
+  `eq_used` int(11) DEFAULT NULL,
+  `eq_not_used` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `equipment_details`
+--
+
+INSERT INTO `equipment_details` (`spec_id`, `eq_id`, `eq_description`, `qty`, `eq_used`, `eq_not_used`) VALUES
+('B105', 'E102', 'Proofing Baskets', 35, 0, 0),
+('B106', 'E103', 'Loaf Pans', 30, 0, 0),
+('B107', 'E103', 'Baguette Trays', 50, 0, 0),
+('B108', 'E103', 'Cooling Racks', 20, 6, 14),
+('C105', 'E102', 'Palette Knives', 10, 0, 0),
+('C106', 'E102', 'Cake Leveler', 4, 0, 0),
+('C107', 'E102', 'Turntable for Decorating', 5, 0, 0),
+('C108', 'E102', 'Decorating Nozzles and Bags', 6, 0, 0),
+('C109', 'E103', 'Cake Tins (Round, Square, Rectangular)', 10, 0, 0),
+('C110', 'E103', 'Springform Pans', 10, 0, 0),
+('CR105', 'E102', 'Rolling Pins', 5, 0, 0),
+('CR106', 'E102', 'Bench Scrapers', 5, 0, 0),
+('CR107', 'E102', 'Dough Cutters', 3, 0, 0),
+('CR108', 'E103', 'Baking Sheets', 20, 0, 0),
+('M105', 'E103', 'Muffin Trays', 50, 0, 0),
+('M106', 'E103', 'Silicone Muffin Cups', 300, 0, 0),
+('M107', 'E103', 'Cooling Racks', 5, 0, 0),
+('P103', 'E102', 'Pizza Peel', 2, 0, 2),
+('P104', 'E102', 'Pizza Cutter', 3, 0, 3),
+('P105', 'E102', 'Dough Dockers', 3, 0, 3),
+('P106', 'E103', 'Pizza Pans', 5, 0, 0),
+('P107', 'E103', 'Pizza Stones', 5, 0, 0),
+('PA105', 'E102', 'Pasta Rolling Pin', 2, 0, 0),
+('PA106', 'E102', 'Ravioli Cutter', 2, 0, 0),
+('PA107', 'E101', 'Pasta Extruder Machine', 1, 0, 0),
+('PA108', 'E101', 'Pasta Cutter', 1, 0, 0),
+('SH105', 'E101', 'Planetary Mixer', 3, 0, 0),
+('SH106', 'E101', 'Dough Sheeter', 1, 1, 0),
+('SH107', 'E101', 'Proofer Cabinet', 2, 0, 0),
+('SH108', 'E101', 'Bread Slicer', 1, 0, 0),
+('SH109', 'E101', 'Convection Oven (Big Size)', 3, 0, 0),
+('SH110', 'E101', 'Refrigerator/Chiller', 2, 0, 0),
+('SH111', 'E101', 'Blast Freezer', 3, 0, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `equipment_list`
+--
+
+CREATE TABLE `equipment_list` (
+  `eq_id` varchar(11) NOT NULL,
+  `eq_list` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `equipment_list`
+--
+
+INSERT INTO `equipment_list` (`eq_id`, `eq_list`) VALUES
+('E101', 'Machines & Utility'),
+('E102', 'Tools'),
+('E103', 'Bakeware');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `equipment_record`
+--
+
+CREATE TABLE `equipment_record` (
+  `id` int(11) NOT NULL,
+  `spec_id` varchar(11) NOT NULL,
+  `eq_used` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `equipment_record`
+--
+
+INSERT INTO `equipment_record` (`id`, `spec_id`, `eq_used`) VALUES
+(205, 'B108', 3),
+(205, 'SH106', 1),
+(206, 'B108', 3);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ing_list`
+--
+
+CREATE TABLE `ing_list` (
+  `recipe_id` int(11) NOT NULL,
+  `ing_type` text NOT NULL,
+  `ing_mass` double NOT NULL,
+  `Unit` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `ing_list`
+--
+
+INSERT INTO `ing_list` (`recipe_id`, `ing_type`, `ing_mass`, `Unit`) VALUES
+(2, 'roti', 10, ''),
+(1, 'Flour (kg)', 10, ''),
+(1, 'Egg (U)', 3, ''),
+(4, 'Flour (kg)', 15, ''),
+(4, 'Egg (U)', 10, ''),
+(4, 'Butter (kg)', 2, ''),
+(3, 'flour', 10, 'kg'),
+(8, 'Flour', 10, 'kg'),
+(8, 'Egg', 5, 'unit'),
+(9, 'Flour', 10, 'kg'),
+(9, 'Egg', 5, 'unit'),
+(10, 'Flour', 5, 'kg'),
+(10, 'Egg', 20, 'unit'),
+(12, 'sugar', 10, 'g');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ing_list_record`
+--
+
+CREATE TABLE `ing_list_record` (
+  `id` int(11) NOT NULL,
+  `recipe_id` int(11) NOT NULL,
+  `ing_type` text NOT NULL,
+  `ing_mass` double NOT NULL,
+  `unit` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `model`
+--
+
+CREATE TABLE `model` (
+  `spec_id` varchar(11) NOT NULL,
+  `model_id` varchar(11) NOT NULL,
+  `model_brand` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `model`
+--
+
+INSERT INTO `model` (`spec_id`, `model_id`, `model_brand`) VALUES
+('SH105', 'SP-7001', 'Hobart'),
+('SH105', 'SP-7002', 'KitchenAid'),
+('SH105', 'SP-7003', 'Vollrath'),
+('SH106', 'SP-7004', 'Somerset'),
+('SH107', 'SP-7005', 'Winholt'),
+('SH107', 'SP-7006', 'Delfield'),
+('SH108', 'SP-7007', 'Berkel'),
+('SH109', 'SP-7008', 'Blodgett'),
+('SH109', 'SP-7009', 'Rational'),
+('SH109', 'SP-7010', 'Unox'),
+('SH110', 'SP-7011', 'True Refrigeration'),
+('SH110', 'SP-7012', 'Turbo Air'),
+('SH111', 'SP-7013', 'Irinox'),
+('SH111', 'SP-7014', 'Alto-Shaam'),
+('SH111', 'SP-7015', 'Hoshizaki');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `order_customer`
+--
+
+CREATE TABLE `order_customer` (
+  `order_id` int(11) NOT NULL,
+  `recipe_name` text NOT NULL,
+  `customer_name` text NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `order_date` date NOT NULL,
+  `status` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `order_customer`
+--
+
+INSERT INTO `order_customer` (`order_id`, `recipe_name`, `customer_name`, `quantity`, `order_date`, `status`) VALUES
+(11, 'Strawberry Cake', 'Pn. Halijah', 5, '2025-01-15', 'Ordered'),
+(12, 'Chocolate Croissant', 'En. Amin', 10, '2025-01-17', 'Unfinished'),
+(13, 'Whole Wheat Bread', 'James Wong', 3, '2025-01-20', 'Unfinished'),
+(14, 'Margherita Pizza', 'En. Bajuri', 8, '2025-01-22', 'Ordered'),
+(15, 'Red Velvet Cake', 'En. Windara', 7, '2025-01-25', 'Ordered'),
+(16, 'Almond Croissant', 'En. Gentar', 12, '2025-01-28', 'Ordered'),
+(17, 'Sourdough Bread', 'En. Saad', 6, '2025-02-01', 'Ordered'),
+(18, 'Pepperoni Pizza', 'Pn. Saodah', 4, '2025-02-04', 'Ordered'),
+(19, 'Carrot Cake', 'En. Amin ', 9, '2025-02-07', 'Ordered'),
+(20, 'Pesto Croissant', 'En. Amirul', 11, '2025-02-10', 'Ordered');
 
 -- --------------------------------------------------------
 
@@ -199,9 +405,8 @@ INSERT INTO `questions` (`id`, `user_id`, `question`, `frm_option`, `type`, `ord
 CREATE TABLE `receipe` (
   `recipe_id` int(11) NOT NULL,
   `recipe_name` text NOT NULL,
-  `recipe_ing` text NOT NULL,
   `recipe_step` text NOT NULL,
-  `equipment` text NOT NULL,
+  `equipment` varchar(11) NOT NULL,
   `product_id` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -209,92 +414,42 @@ CREATE TABLE `receipe` (
 -- Dumping data for table `receipe`
 --
 
-INSERT INTO `receipe` (`recipe_id`, `recipe_name`, `recipe_ing`, `recipe_step`, `equipment`, `product_id`) VALUES
-(500, 'Classic Vanilla Cake', '1. Flour\r\n2. Sugar\r\n3. Eggs\r\n4. Butter', '1. Preheat oven\r\n2. Mix ingredients\r\n3. Bake for 30 minutes', 'Oven', 101),
-(501, 'Chocolate Cake', '1. Cocoa powder\n2. Flour\n3. Sugar\n4. Butter', '1. Preheat oven\n2. Mix ingredients\n3. Bake for 25 minutes', 'Oven', 101),
-(502, 'Red Velvet Cake', '1. Flour\n2. Cocoa powder\n3. Sugar\n4. Buttermilk', '1. Preheat oven\n2. Mix ingredients\n3. Bake for 30 minutes', 'Oven', 101),
-(503, 'Lemon Cake', '1. Flour\n2. Sugar\n3. Lemons\n4. Butter', '1. Preheat oven\n2. Mix ingredients\n3. Bake for 30 minutes', 'Oven', 101),
-(504, 'Carrot Cake', '1. Carrots\n2. Flour\n3. Sugar\n4. Butter', '1. Preheat oven\n2. Mix ingredients\n3. Bake for 40 minutes', 'Oven', 101),
-(505, 'Cheesecake', '1. Cream cheese\n2. Sugar\n3. Eggs\n4. Biscuit base', '1. Prepare crust\n2. Mix filling\n3. Bake for 50 minutes', 'Oven', 101),
-(506, 'Pineapple Upside-Down Cake', '1. Pineapples\n2. Flour\n3. Sugar\n4. Butter', '1. Preheat oven\n2. Arrange pineapples\n3. Mix batter and bake', 'Oven', 101),
-(507, 'Black Forest Cake', '1. Cocoa powder\n2. Cherries\n3. Sugar\n4. Whipped cream', '1. Bake layers\n2. Layer with cherries and cream\n3. Decorate', 'Oven', 101),
-(508, 'Fruit Cake', '1. Dried fruits\n2. Flour\n3. Sugar\n4. Butter', '1. Preheat oven\n2. Mix ingredients\n3. Bake for 50 minutes', 'Oven', 101),
-(509, 'Coffee Cake', '1. Coffee\n2. Flour\n3. Sugar\n4. Butter', '1. Preheat oven\n2. Mix ingredients\n3. Bake for 30 minutes', 'Oven', 101),
-(510, 'Blueberry Muffin', '1. Flour\n2. Sugar\n3. Blueberries\n4. Butter', '1. Preheat oven\n2. Mix ingredients\n3. Bake for 20 minutes', 'Oven', 102),
-(511, 'Banana Muffin', '1. Flour\n2. Sugar\n3. Bananas\n4. Butter', '1. Preheat oven\n2. Mix ingredients\n3. Bake for 20 minutes', 'Oven', 102),
-(512, 'Chocolate Chip Muffin', '1. Flour\n2. Sugar\n3. Chocolate chips\n4. Butter', '1. Preheat oven\n2. Mix ingredients\n3. Bake for 20 minutes', 'Oven', 102),
-(513, 'Apple Cinnamon Muffin', '1. Apples\n2. Flour\n3. Sugar\n4. Cinnamon', '1. Preheat oven\n2. Mix ingredients\n3. Bake for 20 minutes', 'Oven', 102),
-(514, 'Raspberry Muffin', '1. Raspberries\n2. Flour\n3. Sugar\n4. Butter', '1. Preheat oven\n2. Mix ingredients\n3. Bake for 20 minutes', 'Oven', 102),
-(515, 'Corn Muffin', '1. Cornmeal\n2. Flour\n3. Sugar\n4. Butter', '1. Preheat oven\n2. Mix ingredients\n3. Bake for 20 minutes', 'Oven', 102),
-(516, 'Pumpkin Muffin', '1. Pumpkin puree\n2. Flour\n3. Sugar\n4. Butter', '1. Preheat oven\n2. Mix ingredients\n3. Bake for 20 minutes', 'Oven', 102),
-(517, 'Lemon Poppy Seed Muffin', '1. Lemon zest\n2. Flour\n3. Sugar\n4. Poppy seeds', '1. Preheat oven\n2. Mix ingredients\n3. Bake for 20 minutes', 'Oven', 102),
-(518, 'Carrot Muffin', '1. Carrots\n2. Flour\n3. Sugar\n4. Butter', '1. Preheat oven\n2. Mix ingredients\n3. Bake for 20 minutes', 'Oven', 102),
-(519, 'Zucchini Muffin', '1. Zucchini\n2. Flour\n3. Sugar\n4. Butter', '1. Preheat oven\n2. Mix ingredients\n3. Bake for 20 minutes', 'Oven', 102),
-(520, 'Classic Butter Croissant', '1. Flour\n2. Butter\n3. Yeast\n4. Salt', '1. Knead dough\n2. Fold with butter\n3. Bake for 15 minutes', 'Oven', 103),
-(521, 'Chocolate Croissant', '1. Flour\n2. Butter\n3. Chocolate\n4. Yeast', '1. Knead dough\n2. Fill with chocolate\n3. Bake for 15 minutes', 'Oven', 103),
-(522, 'Almond Croissant', '1. Flour\n2. Butter\n3. Almond paste\n4. Yeast', '1. Knead dough\n2. Fill with almond paste\n3. Bake for 15 minutes', 'Oven', 103),
-(523, 'Cheese Croissant', '1. Flour\n2. Butter\n3. Cheese\n4. Yeast', '1. Knead dough\n2. Fill with cheese\n3. Bake for 15 minutes', 'Oven', 103),
-(524, 'Ham and Cheese Croissant', '1. Flour\n2. Butter\n3. Ham\n4. Cheese', '1. Knead dough\n2. Add ham and cheese\n3. Bake for 15 minutes', 'Oven', 103),
-(525, 'Spinach Croissant', '1. Flour\n2. Butter\n3. Spinach\n4. Yeast', '1. Knead dough\n2. Fill with spinach\n3. Bake for 15 minutes', 'Oven', 103),
-(526, 'Pesto Croissant', '1. Flour\n2. Butter\n3. Pesto\n4. Yeast', '1. Knead dough\n2. Fill with pesto\n3. Bake for 15 minutes', 'Oven', 103),
-(527, 'Raspberry Croissant', '1. Flour\n2. Butter\n3. Raspberry jam\n4. Yeast', '1. Knead dough\n2. Fill with raspberry jam\n3. Bake for 15 minutes', 'Oven', 103),
-(528, 'Nutella Croissant', '1. Flour\n2. Butter\n3. Nutella\n4. Yeast', '1. Knead dough\n2. Fill with Nutella\n3. Bake for 15 minutes', 'Oven', 103),
-(529, 'Honey Croissant', '1. Flour\n2. Butter\n3. Honey\n4. Yeast', '1. Knead dough\n2. Glaze with honey\n3. Bake for 15 minutes', 'Oven', 103),
-(532, 'Sourdough Bread', '1. Flour\n2. Water\n3. Salt\n4. Starter', '1. Mix ingredients\n2. Ferment overnight\n3. Bake for 45 minutes', 'Oven', 104),
-(533, 'Rye Bread', '1. Rye flour\n2. Water\n3. Yeast\n4. Salt', '1. Knead dough\n2. Let rise\n3. Bake for 40 minutes', 'Oven', 104),
-(534, 'French Baguette', '1. Flour\n2. Water\n3. Yeast\n4. Salt', '1. Shape dough\n2. Let rise\n3. Bake for 25 minutes', 'Oven', 104),
-(535, 'Ciabatta', '1. Flour\n2. Water\n3. Yeast\n4. Olive oil', '1. Knead dough\n2. Let rise\n3. Bake for 30 minutes', 'Oven', 104),
-(536, 'Brioche', '1. Flour\n2. Eggs\n3. Butter\n4. Yeast', '1. Knead dough\n2. Let rise\n3. Bake for 35 minutes', 'Oven', 104),
-(537, 'Focaccia', '1. Flour\n2. Olive oil\n3. Salt\n4. Rosemary', '1. Knead dough\n2. Top with rosemary\n3. Bake for 20 minutes', 'Oven', 104),
-(538, 'Multigrain Bread', '1. Whole grain flour\n2. Seeds\n3. Yeast\n4. Salt', '1. Mix ingredients\n2. Let rise\n3. Bake for 40 minutes', 'Oven', 104),
-(539, 'Pita Bread', '1. Flour\n2. Water\n3. Yeast\n4. Salt', '1. Knead dough\n2. Let rise\n3. Bake for 10 minutes', 'Oven', 104),
-(540, 'Garlic Naan', '1. Flour\n2. Garlic\n3. Yogurt\n4. Yeast', '1. Mix ingredients\n2. Cook on stovetop', 'Stove', 104),
-(541, 'Onion Bread', '1. Flour\n2. Onion\n3. Yeast\n4. Salt', '1. Mix ingredients\n2. Let rise\n3. Bake for 35 minutes', 'Oven', 104),
-(542, 'Grape Juice', '1. Grapes\n2. Sugar\n3. Water', '1. Blend grapes\n2. Strain\n3. Add sugar and water', 'Blender', 105),
-(543, 'Pineapple Juice', '1. Pineapple\n2. Sugar\n3. Water', '1. Blend pineapple\n2. Strain\n3. Add sugar and water', 'Blender', 105),
-(544, 'Watermelon Juice', '1. Watermelon\n2. Sugar\n3. Ice', '1. Blend watermelon\n2. Strain\n3. Add sugar and serve', 'Blender', 105),
-(545, 'Mango Juice', '1. Mangoes\n2. Sugar\n3. Water', '1. Blend mangoes\n2. Add sugar and water\n3. Stir well', 'Blender', 105),
-(546, 'Guava Juice', '1. Guavas\n2. Sugar\n3. Water', '1. Blend guavas\n2. Strain\n3. Add sugar and water', 'Blender', 105),
-(547, 'Carrot Juice', '1. Carrots\r\n2. Sugar\r\n3. Water', '1. Blend carrots\r\n2. Strain\r\n3. Add sugar and water', 'Juicer', 105),
-(548, 'Lemonade', '1. Lemons\n2. Sugar\n3. Water', '1. Squeeze lemons\n2. Add sugar and water\n3. Stir well', 'Juicer', 105),
-(549, 'Pomegranate Juice', '1. Pomegranates\n2. Sugar\n3. Water', '1. Extract juice\n2. Add sugar and water\n3. Stir well', 'Juicer', 105),
-(550, 'Strawberry Juice', '1. Strawberries\n2. Sugar\n3. Water', '1. Blend strawberries\n2. Strain\n3. Add sugar and water', 'Blender', 105),
-(551, 'Cranberry Juice', '1. Cranberries\n2. Sugar\n3. Water', '1. Blend cranberries\n2. Strain\n3. Add sugar and water', 'Blender', 105),
-(552, 'Vitamin Water', '1. Filtered water\n2. Vitamins\n3. Flavoring', '1. Filter water\n2. Add vitamins and flavor\n3. Package', 'Filter', 106),
-(553, 'Electrolyte Water', '1. Filtered water\n2. Electrolytes', '1. Filter water\n2. Add electrolytes\n3. Package', 'Filter', 106),
-(554, 'Herbal Infused Water', '1. Filtered water\n2. Herbs', '1. Filter water\n2. Add herbs\n3. Package', 'Infuser', 106),
-(555, 'Lemon Infused Water', '1. Filtered water\n2. Lemon slices', '1. Filter water\n2. Add lemon slices\n3. Package', 'Infuser', 106),
-(556, 'Cucumber Infused Water', '1. Filtered water\n2. Cucumber slices', '1. Filter water\n2. Add cucumber slices\n3. Package', 'Infuser', 106),
-(557, 'Mint Infused Water', '1. Filtered water\n2. Mint leaves', '1. Filter water\n2. Add mint leaves\n3. Package', 'Infuser', 106),
-(558, 'Fruit Infused Water', '1. Filtered water\n2. Mixed fruits', '1. Filter water\n2. Add fruits\n3. Package', 'Infuser', 106),
-(559, 'Sparkling Citrus Water', '1. Sparkling water\n2. Citrus zest', '1. Prepare sparkling water\n2. Add citrus zest\n3. Package', 'Carbonator', 106),
-(560, 'Berry Infused Water', '1. Filtered water\n2. Berries', '1. Filter water\n2. Add berries\n3. Package', 'Infuser', 106),
-(561, 'Rose Infused Water', '1. Filtered water\n2. Rose petals', '1. Filter water\n2. Add rose petals\n3. Package', 'Infuser', 106),
-(562, 'Veggie Pizza', '1. Dough\n2. Tomato sauce\n3. Cheese\n4. Mixed vegetables', '1. Prepare dough\n2. Add toppings\n3. Bake for 15 minutes', 'Oven', 107),
-(563, 'BBQ Chicken Pizza', '1. Dough\n2. BBQ sauce\n3. Cheese\n4. Chicken', '1. Prepare dough\n2. Add toppings\n3. Bake for 15 minutes', 'Oven', 107),
-(564, 'Hawaiian Pizza', '1. Dough\n2. Tomato sauce\n3. Cheese\n4. Pineapple and ham', '1. Prepare dough\n2. Add toppings\n3. Bake for 15 minutes', 'Oven', 107),
-(565, 'Buffalo Chicken Pizza', '1. Dough\n2. Buffalo sauce\n3. Cheese\n4. Chicken', '1. Prepare dough\n2. Add toppings\n3. Bake for 15 minutes', 'Oven', 107),
-(566, 'White Sauce Pizza', '1. Dough\n2. White sauce\n3. Cheese\n4. Spinach', '1. Prepare dough\n2. Add toppings\n3. Bake for 15 minutes', 'Oven', 107),
-(567, 'Mushroom Pizza', '1. Dough\n2. Tomato sauce\n3. Cheese\n4. Mushrooms', '1. Prepare dough\n2. Add toppings\n3. Bake for 15 minutes', 'Oven', 107),
-(568, 'Four Cheese Pizza', '1. Dough\n2. Tomato sauce\n3. Mozzarella\n4. Parmesan\n5. Blue cheese\n6. Cheddar', '1. Prepare dough\n2. Add toppings\n3. Bake for 15 minutes', 'Oven', 107),
-(569, 'Spinach and Feta Pizza', '1. Dough\n2. Tomato sauce\n3. Cheese\n4. Spinach and feta', '1. Prepare dough\n2. Add toppings\n3. Bake for 15 minutes', 'Oven', 107),
-(570, 'Sausage Pizza', '1. Dough\n2. Tomato sauce\n3. Cheese\n4. Sausage', '1. Prepare dough\n2. Add toppings\n3. Bake for 15 minutes', 'Oven', 107),
-(571, 'Seafood Pizza', '1. Dough\n2. Tomato sauce\n3. Cheese\n4. Mixed seafood', '1. Prepare dough\n2. Add toppings\n3. Bake for 15 minutes', 'Oven', 107),
-(572, 'Fettuccine Alfredo', '1. Fettuccine\n2. Cream\n3. Cheese\n4. Butter', '1. Boil pasta\n2. Prepare sauce\n3. Mix and serve', 'Stove', 108),
-(573, 'Pasta Carbonara', '1. Spaghetti\n2. Eggs\n3. Cheese\n4. Bacon', '1. Boil pasta\n2. Cook bacon\n3. Mix with eggs and cheese\n4. Serve', 'Stove', 108),
-(574, 'Pesto Pasta', '1. Pasta\n2. Basil\n3. Garlic\n4. Parmesan', '1. Boil pasta\n2. Blend pesto\n3. Mix and serve', 'Stove', 108),
-(575, 'Lasagna', '1. Lasagna sheets\n2. Tomato sauce\n3. Cheese\n4. Minced meat', '1. Layer ingredients\n2. Bake for 30 minutes', 'Oven', 108),
-(576, 'Mac and Cheese', '1. Macaroni\n2. Cheese\n3. Milk\n4. Butter', '1. Boil pasta\n2. Prepare sauce\n3. Mix and bake', 'Stove', 108),
-(580, 'Fettuccine Carbonara', '1. Fettuccine\r\n2. Egg yolks\r\n3. Parmesan cheese\r\n4. Pancetta', '1. Cook pasta\r\n2. Prepare sauce with pancetta and egg yolks\r\n3. Mix pasta with sauce and serve', 'Stove', 108),
-(581, 'Mac and Cheese', '1. Macaroni\r\n2. Cheese\r\n3. Milk\r\n4. Butter', '1. Boil macaroni\r\n2. Prepare cheese sauce\r\n3. Mix macaroni with sauce and serve', 'Stove', 108),
-(582, 'Pesto Pasta', '1. Pasta of choice\r\n2. Basil\r\n3. Garlic\r\n4. Olive oil', '1. Cook pasta\r\n2. Blend basil, garlic, and olive oil into pesto\r\n3. Mix pasta with pesto and serve', 'Blender', 108),
-(583, 'Linguine with Clam Sauce', '1. Linguine\r\n2. Clams\r\n3. Garlic\r\n4. White wine', '1. Cook pasta\r\n2. Prepare clam sauce with garlic and wine\r\n3. Combine pasta with sauce and serve', 'Stove', 108),
-(584, 'Spaghetti Aglio e Olio', '1. Spaghetti\r\n2. Garlic\r\n3. Olive oil\r\n4. Red chili flakes', '1. Boil spaghetti\r\n2. Sauté garlic in olive oil\r\n3. Toss spaghetti with garlic oil and serve', 'Stove', 108),
-(585, 'Vegetarian Lasagna', '1. Lasagna noodles\r\n2. Tomato sauce\r\n3. Ricotta cheese\r\n4. Vegetables', '1. Layer noodles, sauce, and vegetables\r\n2. Bake for 40 minutes\r\n3. Serve hot', 'Oven', 108),
-(586, 'Seafood Alfredo', '1. Pasta of choice\r\n2. Cream\r\n3. Shrimp and scallops\r\n4. Parmesan cheese', '1. Cook pasta\r\n2. Prepare Alfredo sauce with seafood\r\n3. Combine pasta with sauce and serve', 'Stove', 108),
-(587, 'Pasta Primavera', '1. Pasta of choice\r\n2. Mixed vegetables\r\n3. Olive oil\r\n4. Parmesan cheese', '1. Cook pasta\r\n2. Sauté vegetables\r\n3. Toss pasta with vegetables and serve', 'Stove', 108),
-(588, 'Baked Ziti', '1. Ziti pasta\r\n2. Tomato sauce\r\n3. Mozzarella cheese\r\n4. Ricotta cheese', '1. Boil pasta\r\n2. Layer pasta, sauce, and cheeses\r\n3. Bake for 25 minutes and serve', 'Oven', 108),
-(589, 'Penne Arrabbiata', '1. Penne\r\n2. Tomato sauce\r\n3. Garlic\r\n4. Red chili peppers', '1. Cook penne\r\n2. Prepare spicy tomato sauce\r\n3. Mix penne with sauce and serve', 'Stove', 108);
+INSERT INTO `receipe` (`recipe_id`, `recipe_name`, `recipe_step`, `equipment`, `product_id`) VALUES
+(1, 'White bread', 'Bake on the oven for 14 minutes', 'E102', 104),
+(2, 'roti bakor', 'bakor\nbakor', 'E101', 104),
+(3, 'Fruit Croissant', 'Bake in the oven for 13 minutes', 'E102', 103),
+(4, 'Classic Muffin', 'Bake muffin for 15 minutes', 'E101', 102),
+(8, 'Garlic Bread', 'Bake for 15 minutes', '[{\"specId\":', 104),
+(9, 'roti bakor', 'wejoiq', '[{\"specId\":', 103),
+(10, 'Fix Croissant', '1. Bake for 13 minutes', '[{\"specId\":', 103),
+(12, 'Orange Juice', 'Shake for 15 minutes', '[{\"specId\":', 105);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `recipe_equipment`
+--
+
+CREATE TABLE `recipe_equipment` (
+  `recipe_id` int(11) NOT NULL,
+  `spec_id` varchar(11) NOT NULL,
+  `eq_description` varchar(200) NOT NULL,
+  `eq_used` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `recipe_equipment`
+--
+
+INSERT INTO `recipe_equipment` (`recipe_id`, `spec_id`, `eq_description`, `eq_used`) VALUES
+(8, '0', '\n                                                B105 - Proofing Baskets                                            ', 0),
+(8, '0', '\n                                                B107 - Baguette Trays                                            ', 0),
+(7, 'P107', 'P107 - Pizza Stones', 0),
+(9, 'B108', 'B108 - Cooling Racks', 0),
+(9, 'CR107', 'CR107 - Dough Cutters', 0),
+(10, 'B108', 'B108 - Cooling Racks', 161),
+(10, 'SH106', 'SH106 - Dough Sheeter', 151),
+(12, 'B106', 'B106 - Loaf Pans', 0);
 
 -- --------------------------------------------------------
 
@@ -315,7 +470,7 @@ CREATE TABLE `staff_information` (
 INSERT INTO `staff_information` (`staff_id`, `staff_name`, `user_id`) VALUES
 (100001, 'Baker 1', 79),
 (100002, 'Baker 2', 80),
-(100003, 'Baker 3', 88),
+(100003, 'Baker 3', 90),
 (100004, 'Baker 4', 83),
 (100005, 'Supervisor', 81);
 
@@ -399,8 +554,8 @@ INSERT INTO `users` (`id`, `fullname`, `contact`, `address`, `email`, `password`
 (79, 'Adib', '', '', 'ztebqlux@gmail.com', '25f9e794323b453885f5181f1b624d0b', 3, '2024-12-29 04:51:27', 100001),
 (80, 'Halim', '', '', 'ztebqlux@gmail.com', 'e13dd027be0f2152ce387ac0ea83d863', 3, '2024-12-29 04:52:22', 100002),
 (81, 'Ahza', '', '', 'ztebqlux@gmail.com', 'e82c4b19b8151ddc25d4d93baf7b908f', 2, '2024-12-29 04:53:08', 100005),
-(83, 'Najmi', '', '', 'ztebqlux@gmail.com', '9519bc1bbb643029053f051d004ce283', 3, '2024-12-29 04:55:17', 100004),
-(88, 'mirul', '', '', 'danielhkl118@gmail.com', 'cdffdceff32344176683f363ec285e54', 3, '2024-12-29 15:31:17', 100003);
+(89, 'saad', '', '', 'ztebqlux@gmail.com', 'fed33392d3a48aa149a87a38b875ba4a', 3, '2025-01-11 21:06:26', 0),
+(90, 'najmi', '', '', 'ztebqlux@gmail.com', 'd93591bdf7860e1e4ee2fca799911215', 3, '2025-01-11 21:08:29', 100003);
 
 --
 -- Indexes for dumped tables
@@ -423,6 +578,37 @@ ALTER TABLE `categories`
 --
 ALTER TABLE `contact`
   ADD PRIMARY KEY (`ID`);
+
+--
+-- Indexes for table `equipment_details`
+--
+ALTER TABLE `equipment_details`
+  ADD PRIMARY KEY (`spec_id`),
+  ADD KEY `fk_eq_id` (`eq_id`);
+
+--
+-- Indexes for table `equipment_list`
+--
+ALTER TABLE `equipment_list`
+  ADD PRIMARY KEY (`eq_id`);
+
+--
+-- Indexes for table `ing_list`
+--
+ALTER TABLE `ing_list`
+  ADD KEY `fk_recipe_id` (`recipe_id`);
+
+--
+-- Indexes for table `model`
+--
+ALTER TABLE `model`
+  ADD KEY `fk_model_spec_id` (`spec_id`);
+
+--
+-- Indexes for table `order_customer`
+--
+ALTER TABLE `order_customer`
+  ADD PRIMARY KEY (`order_id`);
 
 --
 -- Indexes for table `page`
@@ -481,13 +667,19 @@ ALTER TABLE `answers`
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=128;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=208;
 
 --
 -- AUTO_INCREMENT for table `contact`
 --
 ALTER TABLE `contact`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `order_customer`
+--
+ALTER TABLE `order_customer`
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `page`
@@ -511,11 +703,29 @@ ALTER TABLE `survey_set`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=89;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=91;
 
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `equipment_details`
+--
+ALTER TABLE `equipment_details`
+  ADD CONSTRAINT `fk_eq_id` FOREIGN KEY (`eq_id`) REFERENCES `equipment_list` (`eq_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `ing_list`
+--
+ALTER TABLE `ing_list`
+  ADD CONSTRAINT `fk_recipe_id` FOREIGN KEY (`recipe_id`) REFERENCES `receipe` (`recipe_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `model`
+--
+ALTER TABLE `model`
+  ADD CONSTRAINT `fk_model_spec_id` FOREIGN KEY (`spec_id`) REFERENCES `equipment_details` (`spec_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `receipe`

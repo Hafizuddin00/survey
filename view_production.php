@@ -52,6 +52,10 @@ if (isset($_GET['id'])) {
 			<td><b><?php echo $recipe_id ?></b></td>
 		</tr>
 		<tr>
+			<th>Recipe Ingredients:</th>
+			<td><b><?php echo $ingredients_data ?></b></td>
+		</tr>
+		<tr>
 			<th>Quality (Status):</th>
 			<td><b><?php echo $quality_test ?></b></td>
 		</tr>

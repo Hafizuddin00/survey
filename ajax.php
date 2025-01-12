@@ -130,6 +130,7 @@ if ($_GET['action'] == 'delete_product') {
     }
     exit();
 }
+// Corrected PHP code for saving ingredients and equipment
 if ($_GET['action'] == 'save_recipe') {
     $data = json_decode(file_get_contents("php://input"), true);
 
@@ -141,24 +142,94 @@ if ($_GET['action'] == 'save_recipe') {
     $recipe_step = $data['recipe_step'];
     $ingredients = $data['ingredients'];
 
+    // Use a prepared statement for UPDATE or INSERT
     if ($id) {
-        $update = $conn->query("UPDATE receipe SET recipe_id='$recipe_id', product_id='$product_id', recipe_name='$recipe_name', equipment='$equipment', recipe_step='$recipe_step' WHERE id='$id'");
-        if (!$update) die(json_encode(['error' => $conn->error]));
+        $stmt = $conn->prepare("UPDATE receipe SET product_id = ?, recipe_name = ?, equipment = ?, recipe_step = ? WHERE recipe_id = ?");
+        if ($stmt) {
+            $stmt->bind_param("ssssi", $product_id, $recipe_name, json_encode($equipment), $recipe_step, $id);
+            if (!$stmt->execute()) {
+                die(json_encode(['error' => $stmt->error]));
+            }
+            $stmt->close();
+        } else {
+            die(json_encode(['error' => $conn->error]));
+        }
     } else {
-        $insert = $conn->query("INSERT INTO receipe (recipe_id, product_id, recipe_name, equipment, recipe_step) VALUES ('$recipe_id', '$product_id', '$recipe_name', '$equipment', '$recipe_step')");
-        if (!$insert) die(json_encode(['error' => $conn->error]));
-        $id = $conn->insert_id;
+        $stmt = $conn->prepare("INSERT INTO receipe (recipe_id, product_id, recipe_name, equipment, recipe_step) VALUES (?, ?, ?, ?, ?)");
+        if ($stmt) {
+            $stmt->bind_param("issss", $recipe_id, $product_id, $recipe_name, json_encode($equipment), $recipe_step);
+            if (!$stmt->execute()) {
+                die(json_encode(['error' => $stmt->error]));
+            }
+            $id = $stmt->insert_id;
+            $stmt->close();
+        } else {
+            die(json_encode(['error' => $conn->error]));
+        }
     }
 
-    $conn->query("DELETE FROM ing_list WHERE recipe_id='$recipe_id'");
-    foreach ($ingredients as $ingredient) {
-        $ing_type = $conn->real_escape_string($ingredient['ingredient']);
-        $ing_mass = $conn->real_escape_string($ingredient['qty']);
-        $conn->query("INSERT INTO ing_list (recipe_id, ing_type, ing_mass) VALUES ('$recipe_id', '$ing_type', '$ing_mass')");
+    // Clear existing ingredients and equipment for the recipe
+    $stmt = $conn->prepare("DELETE FROM ing_list WHERE recipe_id = ?");
+    if ($stmt) {
+        $stmt->bind_param("i", $recipe_id);
+        if (!$stmt->execute()) {
+            die(json_encode(['error' => $stmt->error]));
+        }
+        $stmt->close();
+    } else {
+        die(json_encode(['error' => $conn->error]));
     }
 
-    echo 1;
+    $stmt = $conn->prepare("DELETE FROM recipe_equipment WHERE recipe_id = ?");
+    if ($stmt) {
+        $stmt->bind_param("i", $recipe_id);
+        if (!$stmt->execute()) {
+            die(json_encode(['error' => $stmt->error]));
+        }
+        $stmt->close();
+    } else {
+        die(json_encode(['error' => $conn->error]));
+    }
+
+    // Insert the equipment
+    $stmt = $conn->prepare("INSERT INTO recipe_equipment (recipe_id, spec_id, eq_description) VALUES (?, ?, ?)");
+    if ($stmt) {
+        foreach ($equipment as $eq) {
+            $spec_id = $eq['specId'];
+            $eq_description = $eq['description'];
+
+            $stmt->bind_param("iss", $recipe_id, $spec_id, $eq_description);
+            if (!$stmt->execute()) {
+                die(json_encode(['error' => $stmt->error]));
+            }
+        }
+        $stmt->close();
+    } else {
+        die(json_encode(['error' => $conn->error]));
+    }
+
+    // Insert the ingredients
+    $stmt = $conn->prepare("INSERT INTO ing_list (recipe_id, ing_type, ing_mass, Unit) VALUES (?, ?, ?, ?)");
+    if ($stmt) {
+        foreach ($ingredients as $ingredient) {
+            $ing_type = $ingredient['ingredient'];
+            $ing_mass = $ingredient['qty'];
+            $unit = $ingredient['unit'];
+
+            $stmt->bind_param("isss", $recipe_id, $ing_type, $ing_mass, $unit);
+            if (!$stmt->execute()) {
+                die(json_encode(['error' => $stmt->error]));
+            }
+        }
+        $stmt->close();
+    } else {
+        die(json_encode(['error' => $conn->error]));
+    }
+
+    echo json_encode(['success' => true]);
 }
+
+
 
 
 ob_end_flush();

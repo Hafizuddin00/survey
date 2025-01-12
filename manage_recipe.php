@@ -25,56 +25,42 @@
                     <tbody>
                         <?php
                         $i = 1;
-                        // Query to get recipes and their corresponding ingredients
-                        $qry = $conn->query("SELECT r.*, i.ing_type, i.ing_mass FROM receipe r LEFT JOIN ing_list i ON r.recipe_id = i.recipe_id");
-                        $recipes = []; // To store grouped recipes
+                        // Query to get recipes, their ingredients, and equipment
+                        $qry = $conn->query(
+                            "SELECT r.recipe_id, r.product_id, r.recipe_name, r.recipe_step, 
+                                    GROUP_CONCAT(DISTINCT CONCAT(i.ing_type, ' - ', i.ing_mass) SEPARATOR '<br>') AS ingredients,
+                                    GROUP_CONCAT(DISTINCT eq.eq_description SEPARATOR '<br>') AS equipment
+                             FROM receipe r
+                             LEFT JOIN ing_list i ON r.recipe_id = i.recipe_id
+                             LEFT JOIN recipe_equipment eq ON r.recipe_id = eq.recipe_id
+                             GROUP BY r.recipe_id"
+                        );
 
-                        // Loop through all results and group by recipe_id
-                        while ($row = $qry->fetch_assoc()) {
-                            // Ensure we are grouping the ingredients by recipe_id
-                            if (!isset($recipes[$row['recipe_id']])) {
-                                $recipes[$row['recipe_id']] = [
-                                    'product_id' => $row['product_id'],
-                                    'recipe_name' => $row['recipe_name'],
-                                    'equipment' => $row['equipment'],
-                                    'recipe_step' => $row['recipe_step'],
-                                    'ingredients' => [] // Initialize an empty array for ingredients
-                                ];
-                            }
-
-                            // Add ingredient to the corresponding recipe_id
-                            if (!empty($row['ing_type']) && !empty($row['ing_mass'])) {
-                                $recipes[$row['recipe_id']]['ingredients'][] = $row['ing_type'] . " - " . $row['ing_mass'];
-                            }
-                        }
-
-                        // Now loop through the grouped recipes
-                        foreach ($recipes as $recipe_id => $recipe) :
-                            $ingredient_list = implode("<br>", $recipe['ingredients']); // Concatenate all ingredients with <br> separator
+                        while ($row = $qry->fetch_assoc()):
                         ?>
                             <tr>
                                 <th class="text-center"><?php echo $i++; ?></th>
-                                <td><b><?php echo $recipe['product_id']; ?></b></td>
-                                <td><b><?php echo $recipe_id; ?></b></td>
-                                <td><b><?php echo $recipe['recipe_name']; ?></b></td>
-                                <td><b><?php echo $ingredient_list ? $ingredient_list : "No ingredients"; ?></b></td>
-                                <td><b><?php echo $recipe['equipment']; ?></b></td>
-                                <td><b><?php echo $recipe['recipe_step']; ?></b></td>
+                                <td><b><?php echo htmlspecialchars($row['product_id']); ?></b></td>
+                                <td><b><?php echo htmlspecialchars($row['recipe_id']); ?></b></td>
+                                <td><b><?php echo htmlspecialchars($row['recipe_name']); ?></b></td>
+                                <td><b><?php echo $row['ingredients'] ? $row['ingredients'] : "No ingredients"; ?></b></td>
+                                <td><b><?php echo $row['equipment'] ? $row['equipment'] : "No equipment"; ?></b></td>
+                                <td><b><?php echo htmlspecialchars($row['recipe_step']); ?></b></td>
                                 <td class='text-center'>
                                     <div class='btn-group'>
-                                        <a href='./index.php?page=edit_recipe&id=<?php echo $recipe_id; ?>' class='btn btn-primary btn-flat' title='Edit Recipe'>
+                                        <a href='./index.php?page=edit_recipe&id=<?php echo $row['recipe_id']; ?>' class='btn btn-primary btn-flat' title='Edit Recipe'>
                                             <i class='fas fa-edit'></i>
                                         </a>
-                                        <a href='./index.php?page=view_recipe&id=<?php echo $recipe_id; ?>' class='btn btn-info btn-flat' title='View Recipe'>
+                                        <a href='./index.php?page=view_recipe&id=<?php echo $row['recipe_id']; ?>' class='btn btn-info btn-flat' title='View Recipe'>
                                             <i class='fas fa-eye'></i>
                                         </a>
-                                        <button type='button' class='btn btn-danger btn-flat delete_survey' data-id='<?php echo $recipe_id; ?>' title='Delete Recipe'>
+                                        <button type='button' class='btn btn-danger btn-flat delete_survey' data-id='<?php echo $row['recipe_id']; ?>' title='Delete Recipe'>
                                             <i class='fas fa-trash'></i>
                                         </button>
                                     </div>
                                 </td>
                             </tr>
-                        <?php endforeach; ?>
+                        <?php endwhile; ?>
                     </tbody>
                 </table>
             </div>
