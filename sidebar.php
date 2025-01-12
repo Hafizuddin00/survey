@@ -67,10 +67,10 @@
             </ul>
           </li>
           <li class="nav-item">
-            <a href="./index.php?page=inbox" class="nav-link nav-inbox">
+            <a href="./index.php?page=order_message" class="nav-link nav-order_message">
               <i class="nav-icon fas fa-envelope"></i>
               <p>
-                Inbox
+                Order Message
               </p>
             </a>
           </li>
@@ -100,10 +100,10 @@
           </li>  
           <?php elseif($_SESSION['login_type'] == 2): ?>
             <li class="nav-item">
-            <a href="./index.php?page=inbox" class="nav-link nav-inbox">
+            <a href="./index.php?page=order_message" class="nav-link nav-order_message">
               <i class="nav-icon fas fa-envelope"></i>
               <p>
-                Inbox
+                Order Message
               </p>
             </a>
           </li>
