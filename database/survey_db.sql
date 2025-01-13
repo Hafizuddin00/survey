@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 13, 2025 at 11:55 AM
+-- Generation Time: Jan 12, 2025 at 09:35 PM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- PHP Version: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -36,6 +36,37 @@ CREATE TABLE `answers` (
   `date_created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `answers`
+--
+
+INSERT INTO `answers` (`id`, `survey_id`, `user_id`, `answer`, `question_id`, `date_created`) VALUES
+(1, 1, 2, 'Sample Only', 4, '2020-11-10 14:46:07'),
+(2, 1, 2, '[JNmhW],[zZpTE]', 2, '2020-11-10 14:46:07'),
+(3, 1, 2, 'dAWTD', 1, '2020-11-10 14:46:07'),
+(4, 1, 3, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec in tempus turpis, sed fermentum risus. Praesent vitae velit rutrum, dictum massa nec, pharetra felis. Phasellus enim augue, laoreet in accumsan dictum, mollis nec lectus. Aliquam id viverra nisl. Proin quis posuere nulla. Nullam suscipit eget leo ut suscipit.', 4, '2020-11-10 15:59:43'),
+(5, 1, 3, '[qCMGO],[JNmhW]', 2, '2020-11-10 15:59:43'),
+(6, 1, 3, 'esNuP', 1, '2020-11-10 15:59:43'),
+(7, 6, 4, 'UzLcW', 6, '2023-02-20 21:59:57'),
+(8, 7, 4, 'fMLzB', 7, '2023-02-21 00:30:48'),
+(9, 7, 4, 'xrBJw', 8, '2023-02-21 00:30:48'),
+(10, 8, 13, 'LfmKN', 9, '2023-02-23 18:45:57'),
+(11, 8, 13, '24', 10, '2023-02-23 18:45:57'),
+(12, 8, 13, 'NjEGP', 11, '2023-02-23 18:45:57'),
+(13, 15, 16, 'xiJVI', 13, '2023-04-23 21:32:31'),
+(14, 15, 16, 'j', 14, '2023-04-23 21:32:32'),
+(15, 16, 1, '[akxVj]', 15, '2023-04-23 22:12:43'),
+(16, 15, 1, 'xiJVI', 13, '2023-04-23 22:12:58'),
+(17, 15, 1, '', 14, '2023-04-23 22:12:58'),
+(18, 23, 12, 'Sarvess', 21, '2023-05-01 22:53:52'),
+(19, 24, 12, '24', 22, '2023-05-01 23:20:17'),
+(20, 35, 12, '24', 23, '2023-05-02 02:10:09'),
+(21, 50, 12, 'SqhNv', 24, '2023-05-02 03:44:47'),
+(22, 50, 17, 'lpjxy', 24, '2023-05-02 03:45:11'),
+(23, 52, 17, 'nishalini', 25, '2023-05-13 16:09:22'),
+(24, 52, 17, '[lBrKo]', 26, '2023-05-13 16:09:22'),
+(25, 52, 17, 'Batu Caves', 27, '2023-05-13 16:09:22');
+
 -- --------------------------------------------------------
 
 --
@@ -64,9 +95,8 @@ CREATE TABLE `categories` (
 --
 
 INSERT INTO `categories` (`order_id`, `id`, `product_id`, `recipe_name`, `qty_product`, `staff_id`, `created_at`, `starteddate`, `enddate`, `hours`, `status`, `quality_test`, `comment`, `ingredients_data`) VALUES
-(11, 205, 104, 'White bread', 2147483647, '100005', '2025-01-12 20:12:19', '2025-01-13', '2025-01-31', 2, 'Unfinished', 'Good', '', '[{\"ingredient\":\"Flour (kg)\",\"mass\":\"8.9318888888889E+44\",\"unit\":\"\"},{\"ingredient\":\"Egg (U)\",\"mass\":\"2.6795666666667E+44\",\"unit\":\"\"}]'),
-(0, 206, 103, 'Fix Croissant', 11, '100002', '2025-01-12 20:26:10', '2025-01-13', '2025-01-14', 0, 'Unfinished', '', '', '[\"Flour - 5.5 kg\",\"Egg - 22 unit\"]'),
-(19, 208, 104, 'roti bakor', 2147483647, '100001', '2025-01-13 09:53:30', '2025-01-13', '2025-01-14', 1, 'Unfinished', '', '', '[]');
+(12, 205, 103, 'Fix Croissant', 10, '100003', '2025-01-12 20:12:19', '2025-01-13', '2025-01-14', 2, 'Unfinished', '', '', '[\"Flour - 5 kg\",\"Egg - 20 unit\"]'),
+(0, 206, 103, 'Fix Croissant', 11, '100002', '2025-01-12 20:26:10', '2025-01-13', '2025-01-14', 0, 'Unfinished', '', '', '[\"Flour - 5.5 kg\",\"Egg - 22 unit\"]');
 
 -- --------------------------------------------------------
 
@@ -438,10 +468,10 @@ CREATE TABLE `staff_information` (
 --
 
 INSERT INTO `staff_information` (`staff_id`, `staff_name`, `user_id`) VALUES
-(100001, 'Baker 1', 94),
+(100001, 'Baker 1', 79),
 (100002, 'Baker 2', 80),
-(100003, 'Baker 3', 91),
-(100004, 'Baker 4', 95),
+(100003, 'Baker 3', 90),
+(100004, 'Baker 4', 83),
 (100005, 'Supervisor', 81);
 
 -- --------------------------------------------------------
@@ -461,6 +491,16 @@ CREATE TABLE `survey_set` (
   `end_date` date NOT NULL,
   `date_created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `survey_set`
+--
+
+INSERT INTO `survey_set` (`id`, `title`, `description`, `category`, `user_id`, `respondent`, `start_date`, `end_date`, `date_created`) VALUES
+(50, 'dddd', 'ddd', 'User Testing Templates  ', 16, '12,17', '2023-05-02', '2023-05-18', '2023-05-02 03:32:03'),
+(51, 'Hello', 'helo2', 'Assessment-Quizzes  ', 10, '12,17', '2023-05-03', '2023-05-06', '2023-05-03 00:36:15'),
+(52, 'Latest', 'Latest', 'Education Templates  ', 16, '17', '2023-05-12', '2023-05-20', '2023-05-13 16:07:38'),
+(53, 'Report Errors', 'sdsfsds', 'Education Templates  ', 16, '12,17', '2023-05-13', '2023-05-20', '2023-05-13 16:26:01');
 
 -- --------------------------------------------------------
 
@@ -511,11 +551,11 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `fullname`, `contact`, `address`, `email`, `password`, `type`, `date_created`, `staff_id`) VALUES
 (1, 'Administrator', '+123456789', 'Sample address', 'admin@admin.com', '21232f297a57a5a743894a0e4a801fc3', 1, '2020-11-10 08:43:06', 0),
-(80, 'Halim', '', '', 'baker1@gmail.com', '$2y$10$SyTCddh7Zm5l0G493nWDreqD3CIOBjH/9dM8b/c6Am6g0YLJyKI5a', 3, '2024-12-29 04:52:22', 100002),
-(81, 'Ahza', '', '', 'super@gmail.com', '$2y$10$470tdwuxusQDuo1AmsLW1.ocetuvRtroanzMuKPylfgw01ZI0/RMu', 2, '2024-12-29 04:53:08', 100005),
-(89, 'saad', '', '', 'baker2@gmail.com', '$2y$10$uH60TCa2dlXCimxe99yO3.NL4ghDDSLfct/r3m4Df/Xe38fcNnJbO', 3, '2025-01-11 21:06:26', 100004),
-(91, 'hafizuddin', '', '', 'baker4@gmail.com', '$2y$10$.vRYn4V147JRHVpGolnGoe9BDX4.q6TPXuCzew3VVrCDX7JyBmRDe', 3, '2025-01-13 16:31:38', 100003),
-(94, 'najib', '', '', 'baker3@gmail.com', '$2y$10$q8MccWhTNmjGdgbAYYY.tey472m4jgE.QDZzB2BmRCuUZNaAx8DIi', 3, '2025-01-13 17:04:44', 100001);
+(79, 'Adib', '', '', 'ztebqlux@gmail.com', '25f9e794323b453885f5181f1b624d0b', 3, '2024-12-29 04:51:27', 100001),
+(80, 'Halim', '', '', 'ztebqlux@gmail.com', 'e13dd027be0f2152ce387ac0ea83d863', 3, '2024-12-29 04:52:22', 100002),
+(81, 'Ahza', '', '', 'ztebqlux@gmail.com', 'e82c4b19b8151ddc25d4d93baf7b908f', 2, '2024-12-29 04:53:08', 100005),
+(89, 'saad', '', '', 'ztebqlux@gmail.com', 'fed33392d3a48aa149a87a38b875ba4a', 3, '2025-01-11 21:06:26', 0),
+(90, 'najmi', '', '', 'ztebqlux@gmail.com', 'd93591bdf7860e1e4ee2fca799911215', 3, '2025-01-11 21:08:29', 100003);
 
 --
 -- Indexes for dumped tables
@@ -627,7 +667,7 @@ ALTER TABLE `answers`
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=209;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=208;
 
 --
 -- AUTO_INCREMENT for table `contact`
@@ -663,7 +703,7 @@ ALTER TABLE `survey_set`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=96;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=91;
 
 --
 -- Constraints for dumped tables
