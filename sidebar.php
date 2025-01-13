@@ -1,3 +1,4 @@
+
 <style>
     /* Radial Gradient Background */
     .sidebar-dark-dark {
@@ -163,7 +164,7 @@
   </aside>
   <script>
   	$(document).ready(function(){
-  		var page = '<?php echo htmlspecialchars(isset($_GET['page']) ? $_GET['page'] : 'home', ENT_QUOTES, 'UTF-8'); ?>';
+  		var page = '<?php echo isset($_GET['page']) ? $_GET['page'] : 'home' ?>';
   		if($('.nav-link.nav-'+page).length > 0){
   			$('.nav-link.nav-'+page).addClass('active')
           console.log($('.nav-link.nav-'+page).hasClass('tree-item'))

@@ -3,10 +3,7 @@
 <?php
 // Fetch category and recipe details
 if (isset($_GET['id'])) {
-    $stmt = $conn->prepare("SELECT c.*, r.recipe_id FROM categories c LEFT JOIN receipe r ON c.recipe_name = r.recipe_name WHERE c.id = ?");
-    $stmt->bind_param("i", $_GET['id']);
-    $stmt->execute();
-    $qry = $stmt->get_result()->fetch_array();
+    $qry = $conn->query("SELECT c.*, r.recipe_id FROM categories c LEFT JOIN receipe r ON c.recipe_name = r.recipe_name WHERE c.id = " . $_GET['id'])->fetch_array();
 
     foreach ($qry as $k => $v) {
         $$k = $v;
