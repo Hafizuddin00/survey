@@ -16,12 +16,7 @@
                     </thead>
                     <tbody>
                         <?php
-                        // Using prepared statement for the first query
-                        $stmt = $conn->prepare("SELECT DISTINCT staff_id FROM users WHERE type = ?");
-                        $type = 3;
-                        $stmt->bind_param("i", $type);
-                        $stmt->execute();
-                        $qry = $stmt->get_result();
+                        $qry = $conn->query("SELECT DISTINCT staff_id FROM users WHERE type = 3");
 
                         if (!$qry) {
                             die("Query failed: " . $conn->error);
@@ -31,12 +26,8 @@
                             $staff_id = $row['staff_id'];
                             $unavailable_dates = [];
 
-                            // Fix the second query to use prepared statement as well
-                            $schedule_stmt = $conn->prepare("SELECT starteddate, enddate, id, status FROM categories WHERE staff_id = ?");
-                            $schedule_stmt->bind_param("s", $staff_id);
-                            $schedule_stmt->execute();
-                            $schedule_qry = $schedule_stmt->get_result();
-
+                            // Fetch schedules for the staff member
+                            $schedule_qry = $conn->query("SELECT starteddate, enddate, id, status FROM categories WHERE staff_id = '$staff_id'");
                             if ($schedule_qry) {
                                 while ($sched = $schedule_qry->fetch_assoc()) {
                                     // Only include this date range if the status is not 'Finished'
