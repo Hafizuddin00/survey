@@ -24,35 +24,38 @@ Class Action {
 		session_start(); // Ensure the session is started
 		extract($_POST);
 	
-		// Use prepared statements instead of string concatenation
-		$qry = $this->db->prepare("
+		// Query for the user based on email and password only
+		$qry = $this->db->query("
 			SELECT *, CONCAT(fullname) AS name 
 			FROM users 
-			WHERE email = ? 
-			AND password = ?
+			WHERE email = '".$email."' 
+			  AND password = '".md5($password)."'
 		");
-		
-		if (!$qry->bind_param("ss", $email, md5($password))) {
-			error_log("Binding parameters failed: " . $qry->error);
-			return 3;
-		}
-		
-		if (!$qry->execute()) {
-			error_log("Query execution failed: " . $qry->error);
-			return 3;
-		}
-		
-		$result = $qry->get_result();
-		if ($result->num_rows > 0) {
-			$user = $result->fetch_array();
+	
+		if ($qry->num_rows > 0) {
+			$user = $qry->fetch_array(); // Fetch the single matched user record
+	
+			// Debug: Log the user array
+			error_log(print_r($user, true));
+	
 			foreach ($user as $key => $value) {
 				if ($key != 'password' && !is_numeric($key)) {
-					$_SESSION['login_' . $key] = htmlspecialchars($value);
+					$_SESSION['login_' . $key] = $value; // Store user details in the session
 				}
 			}
-			return 1;
+	
+			// Assign the staff_id to session if it exists in the user array
+			if (isset($user['staff_id'])) {
+				$_SESSION['login_staff_id'] = $user['staff_id']; // Extract the staff_id from the query result
+			} else {
+				// Debug: Log if staff_id is not found
+				error_log("staff_id not found in query result.");
+			}
+	
+			return 1; // Login successful
+		} else {
+			return 3; // Login failed
 		}
-		return 3;
 	}
 	
 	
@@ -65,54 +68,33 @@ Class Action {
 		header("location:login.php");
 	}
 
-	function save_user() {
-		try {
-			$this->db->begin_transaction();
-			
-			extract($_POST);
-			$data = [];
-			$params = [];
-			$types = "";
-			
-			foreach ($_POST as $k => $v) {
-				if (!in_array($k, array('id', 'cpass')) && !is_numeric($k)) {
-					$data[] = "$k = ?";
-					if ($k == 'password') {
-						$params[] = password_hash($v, PASSWORD_DEFAULT); // Use secure hashing
-					} else {
-						$params[] = $v;
-					}
-					$types .= "s";
-				}
-			}
-			
-			if (empty($id)) {
-				$sql = "INSERT INTO users SET " . implode(", ", $data);
-			} else {
-				$sql = "UPDATE users SET " . implode(", ", $data) . " WHERE id = ?";
-				$params[] = $id;
-				$types .= "i";
-			}
-			
-			$stmt = $this->db->prepare($sql);
-			if (!$stmt) {
-				throw new Exception("Prepare failed: " . $this->db->error);
-			}
-			
-			$stmt->bind_param($types, ...$params);
-			if (!$stmt->execute()) {
-				throw new Exception("Execute failed: " . $stmt->error);
-			}
-			
-			$this->db->commit();
-			return 1;
-			
-		} catch (Exception $e) {
-			$this->db->rollback();
-			error_log("Save user error: " . $e->getMessage());
-			return 0;
-		}
-	}
+	function save_user()
+{
+    extract($_POST);
+    $data = "";
+    foreach ($_POST as $k => $v) {
+        if (!in_array($k, array('id', 'cpass')) && !is_numeric($k)) {
+            if ($k =='password') {
+                $v = md5($v);
+            }
+            if (empty($data)) {
+                $data .= " $k='$v' ";
+            } else {
+                $data .= ", $k='$v' ";
+            }
+        }
+    }
+
+    if (empty($id)) {
+        $save = $this->db->query("INSERT INTO users SET $data");
+    } else {
+        $save = $this->db->query("UPDATE users SET $data WHERE id = $id");
+    }
+
+    if ($save) {
+        return 1;
+    }
+}
 
 	function update_user(){
 		extract($_POST);
@@ -147,27 +129,11 @@ Class Action {
 			return 1;
 		}
 	}
-	function delete_user() {
-		try {
-			if (!isset($_POST['id']) || !is_numeric($_POST['id'])) {
-				throw new Exception("Invalid user ID");
-			}
-			
-			$stmt = $this->db->prepare("DELETE FROM users WHERE id = ?");
-			if (!$stmt) {
-				throw new Exception("Prepare failed: " . $this->db->error);
-			}
-			
-			$stmt->bind_param("i", $_POST['id']);
-			if (!$stmt->execute()) {
-				throw new Exception("Execute failed: " . $stmt->error);
-			}
-			
+	function delete_user(){
+		extract($_POST);
+		$delete = $this->db->query("DELETE FROM users where id = ".$id);
+		if($delete)
 			return 1;
-		} catch (Exception $e) {
-			error_log("Delete user error: " . $e->getMessage());
-			return 0;
-		}
 	}
 	function delete_message(){
 		extract($_POST);

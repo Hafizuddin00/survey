@@ -5,9 +5,17 @@ require "vendor/autoload.php";
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 
+session_start();
+
 if (isset($_POST['submit'])) {
-    // Retrieve form data
-    // Sanitize and validate user inputs
+    // Strengthen password requirements
+    if (strlen($_POST['password']) < 8) {
+        echo '<script>alert("Password must be at least 8 characters long")</script>';
+        echo "<script>window.location.href = 'registration.php';</script>";
+        exit;
+    }
+
+    // Retrieve form data with stronger sanitization
     $fullname = htmlspecialchars(trim($_POST['fullname']), ENT_QUOTES, 'UTF-8');
     $email = filter_var(trim($_POST['email']), FILTER_SANITIZE_EMAIL);
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -16,8 +24,23 @@ if (isset($_POST['submit'])) {
         exit;
     }
     
-    $password = md5($_POST['password']);
-    $type = $_POST['type'];
+    // Validate type is only 2 or 3
+    $type = filter_var($_POST['type'], FILTER_VALIDATE_INT);
+
+    if ($type === false || !in_array($type, [2, 3], true)) {
+        echo '<script>alert("Invalid user type selected.");</script>';
+        echo "<script>window.location.href = 'registration.php';</script>";
+        exit;
+    }
+
+    // Use password_hash instead of md5
+    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+
+    // Add CSRF protection
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        echo '<script>alert("Invalid request")</script>';
+        exit;
+    }
 
     // Get all staff_id values from staff_information
     $staffSQL = "SELECT staff_id FROM staff_information";
@@ -143,6 +166,11 @@ easysurvey123@gmail.com";
         echo '<script>alert("Something Went Wrong. Please try again")</script>';
     }
 }
+
+// Add CSRF token to form
+$csrf_token = bin2hex(random_bytes(32));
+$_SESSION['csrf_token'] = $csrf_token;
+
 ?>
 
 <!doctype html>
@@ -198,6 +226,7 @@ easysurvey123@gmail.com";
 				
 				<div class="contact-grids">
                 <form class="forms-sample" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
                 <h3>Information details</h3>
                       <div class="form-group">
                         <label for="exampleInputName1">Full Name</label>
