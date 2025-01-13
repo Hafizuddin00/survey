@@ -1,4 +1,3 @@
-
 <?php include 'db_connect.php'; ?>
 <?php
 
@@ -34,9 +33,9 @@ if (isset($_GET['recipe_name']) && isset($_GET['qty'])) {
         while ($row = $result->fetch_assoc()) {
             $calculated_mass = ($qty / 10) * floatval($row['ing_mass']);
             echo "<tr>
-                    <td>{$row['ing_type']}</td>
-                    <td>{$calculated_mass}</td>
-                    <td>{$row['Unit']}</td>
+                    <td>" . htmlspecialchars($row['ing_type'], ENT_QUOTES, 'UTF-8') . "</td>
+                    <td>" . htmlspecialchars($calculated_mass, ENT_QUOTES, 'UTF-8') . "</td>
+                    <td>" . htmlspecialchars($row['Unit'], ENT_QUOTES, 'UTF-8') . "</td>
                   </tr>";
         }
         echo "</tbody></table>";

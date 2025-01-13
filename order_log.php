@@ -11,7 +11,7 @@
                 <div class="form-row mb-3">
                     <div class="col-md-4">
                         <label for="filter_date">Select Date:</label>
-                        <input type="date" id="filter_date" name="filter_date" class="form-control" value="<?php echo isset($_POST['filter_date']) ? $_POST['filter_date'] : ''; ?>">
+                        <input type="date" id="filter_date" name="filter_date" class="form-control" value="<?php echo htmlspecialchars(isset($_POST['filter_date']) ? $_POST['filter_date'] : '', ENT_QUOTES, 'UTF-8'); ?>">
                     </div>
                     <div class="col-md-4">
                         <label for="staff_id">Select Staff ID:</label>

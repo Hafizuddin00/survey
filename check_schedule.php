@@ -44,9 +44,12 @@ if (isset($_GET['staff_id'], $_GET['start_date'], $_GET['end_date'])) {
         // Send JSON response
         echo json_encode(['available' => $available]);
     } catch (Exception $e) {
-        // Handle errors gracefully
-        http_response_code(500); // Internal Server Error
-        echo json_encode(['error' => 'An error occurred while checking availability.', 'details' => $e->getMessage()]);
+        // Log the error securely (you should implement proper logging)
+        error_log("Database error in check_schedule.php: " . $e->getMessage());
+        
+        // Return generic error message to client
+        http_response_code(500);
+        echo json_encode(['error' => 'An error occurred while checking availability.']);
     }
 } else {
     // Invalid request response

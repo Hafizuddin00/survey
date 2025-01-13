@@ -171,15 +171,23 @@ Class Action {
 	}
 	function delete_user(){
 		extract($_POST);
-		$delete = $this->db->query("DELETE FROM users where id = ".$id);
-		if($delete)
-			return 1;
+		$stmt = $this->db->prepare("DELETE FROM users WHERE id = ?");
+		if (!$stmt) {
+			error_log("Prepare failed: " . $this->db->error);
+			return 0;
+		}
+		$stmt->bind_param("i", $id);
+		return $stmt->execute() ? 1 : 0;
 	}
 	function delete_message(){
 		extract($_POST);
-		$delete = $this->db->query("DELETE FROM contact where ID = ".$id);
-		if($delete)
-			return 1;
+		$stmt = $this->db->prepare("DELETE FROM contact WHERE ID = ?");
+		if (!$stmt) {
+			error_log("Prepare failed: " . $this->db->error);
+			return 0;
+		}
+		$stmt->bind_param("i", $id);
+		return $stmt->execute() ? 1 : 0;
 	}
 	function delete_categories() {
         extract($_POST);
@@ -255,40 +263,46 @@ Class Action {
     
             return 1;
         } catch (Exception $e) {
-            // Log the error and display a generic message
-            echo '<script>alert("Error: ' . $e->getMessage() . '");</script>';
+            // Log the detailed error message securely
+            error_log("Delete categories error: " . $e->getMessage());
+            
+            // Display only a generic message to users
+            echo '<script>alert("An error occurred while processing your request.");</script>';
             echo "An error occurred while processing the records. Please try again later.";
             return 0;
         }
     }
 	function update_status() {
 		extract($_POST);
-		$update = $this->db->query("UPDATE categories SET status = '$status' WHERE id = $id");
-		if ($update) {
-			return 1;
-		} else {
+		$stmt = $this->db->prepare("UPDATE categories SET status = ? WHERE id = ?");
+		if (!$stmt) {
+			error_log("Prepare failed: " . $this->db->error);
 			return 0;
 		}
+		$stmt->bind_param("si", $status, $id);
+		return $stmt->execute() ? 1 : 0;
 	}
 
 	function update_quality() {
 		extract($_POST);
-		$update = $this->db->query("UPDATE categories SET quality_test = '$quality_test' WHERE id = $id");
-		if ($update) {
-			return 1;
-		} else {
+		$stmt = $this->db->prepare("UPDATE categories SET quality_test = ? WHERE id = ?");
+		if (!$stmt) {
+			error_log("Prepare failed: " . $this->db->error);
 			return 0;
 		}
+		$stmt->bind_param("si", $quality_test, $id);
+		return $stmt->execute() ? 1 : 0;
 	}
 
 	function save_comment() {
 		extract($_POST);
-		$update = $this->db->query("UPDATE categories SET comment = '$comment' WHERE id = $id");
-		if ($update) {
-			return 1;
-		} else {
+		$stmt = $this->db->prepare("UPDATE categories SET comment = ? WHERE id = ?");
+		if (!$stmt) {
+			error_log("Prepare failed: " . $this->db->error);
 			return 0;
 		}
+		$stmt->bind_param("si", $comment, $id);
+		return $stmt->execute() ? 1 : 0;
 	}
 
 	function delete_all_data() {
@@ -313,100 +327,88 @@ Class Action {
 			return 0; // Failure
 		}
 	}
-	
-	
-	
-
-	function save_page_img(){
-		extract($_POST);
-		if($_FILES['img']['tmp_name'] != ''){
-				$fname = strtotime(date('y-m-d H:i')).'_'.$_FILES['img']['name'];
-				$move = move_uploaded_file($_FILES['img']['tmp_name'],'assets/uploads/'. $fname);
-				if($move){
-					$protocol = strtolower(substr($_SERVER["SERVER_PROTOCOL"],0,5))=='https'?'https':'http';
-					$hostName = $_SERVER['HTTP_HOST'];
-						$path =explode('/',$_SERVER['PHP_SELF']);
-						$currentPath = '/'.$path[1]; 
-   						 // $pathInfo = pathinfo($currentPath); 
-
-					return json_encode(array('link'=>$protocol.'://'.$hostName.$currentPath.'/admin/assets/uploads/'.$fname));
-
-				}
-		}
-	}
 
 	function save_categories() {
 		extract($_POST);
-	
+
 		$data = [];
 		$values = [];
-	
-		// Check if ingredients_data is set.
+		$types = "";
+
+		// Whitelist of allowed fields to prevent SQL injection via column names
+		$allowed_fields = [
+			'ingredients_data', 'name', 'description', 'status', 'quality_test', 
+			'comment', 'order_id', 'date_created', 'date_updated'
+			// Add other valid field names here
+		];
+
+		// Check if ingredients_data is set
 		if (isset($ingredients_data)) {
-			$data[] = "`ingredients_data` = ?";
+			$data[] = "ingredients_data = ?";
 			$values[] = $ingredients_data;
+			$types .= "s";
 		}
-	
-		// Loop through other fields and prepare them for insertion.
+
+		// Loop through other fields and prepare them for insertion
 		foreach ($_POST as $key => $value) {
-			if (!in_array($key, ['id', 'ingredients_data', 'equipment_data', 'recipe_id']) && !is_numeric($key)) {
+			// Only allow whitelisted fields and skip special fields
+			if (in_array($key, $allowed_fields) && 
+				!in_array($key, ['id', 'ingredients_data', 'equipment_data', 'recipe_id'])) {
 				$data[] = "`$key` = ?";
 				$values[] = $value;
+				$types .= "s"; // Assuming all inputs are strings
 			}
 		}
-	
-		// Ensure 'id' is part of the binding values if updating
+
+		// Add id to values array if updating
 		if (!empty($id)) {
 			$values[] = $id;
+			$types .= "i";
 		}
-	
-		// Prepare the query to insert or update.
+
+		// Prepare the query using placeholders
 		if (empty($id)) {
 			$query = "INSERT INTO categories SET " . implode(", ", $data);
 		} else {
 			$query = "UPDATE categories SET " . implode(", ", $data) . " WHERE id = ?";
 		}
-	
-		// Execute the query using a prepared statement.
+
+		// Execute the query using prepared statement
 		$stmt = $this->db->prepare($query);
 		if (!$stmt) {
-			echo "SQL Error: " . $this->db->error;
-			return 0; // Failure.
+			error_log("Prepare failed: " . $this->db->error);
+			return 0;
 		}
-	
-		$types = str_repeat('s', count($values) - (empty($id) ? 0 : 1)); // Assuming all inputs are strings.
-		if (!empty($id)) {
-			$types .= 'i'; // Adding an integer type for the id.
-		}
+
 		$stmt->bind_param($types, ...$values);
-	
+		
 		if (!$stmt->execute()) {
-			echo "SQL Error: " . $stmt->error;
-			return 0; // Failure.
+			error_log("Execute failed: " . $stmt->error);
+			return 0;
 		}
-	
+
 		// Get the last inserted id if inserting a new record
 		if (empty($id)) {
 			$id = $this->db->insert_id;
 		}
-	
+
 		// Apply Equipment logic.
 		if (isset($equipment_data)) {
 			$equipment_data = json_decode($equipment_data, true);
-	
+
 			if (!is_array($equipment_data)) {
 				echo "Invalid equipment data format.";
 				return 0; // Failure.
 			}
-	
+
 			foreach ($equipment_data as $equipment) {
 				$recipe_id = $equipment['recipe_id'];
 				$spec_id = $equipment['spec_id'];
 				$used_qty = $equipment['qty']; // Use 'qty' field.
-	
+
 				// Debug the parameters.
 				error_log("Updating: spec_id=$spec_id, used_qty=$used_qty");
-	
+
 				// Update equipment_details.
 				$stmt = $this->db->prepare("
 					UPDATE equipment_details 
@@ -422,15 +424,15 @@ Class Action {
 					error_log("Execute failed: " . $stmt->error);
 					return 0; // Failure.
 				}
-	
+
 				$stmt->close();
-	
+
 				// Insert record into equipment_record table or update it if it exists.
 				if (!isset($id)) {
 					echo "Error: Record 'id' is missing.";
 					return 0; // Failure.
 				}
-	
+
 				// Check if the record exists in equipment_record table
 				$stmt = $this->db->prepare("
 					SELECT id FROM equipment_record WHERE id = ? AND spec_id = ?
@@ -442,7 +444,7 @@ Class Action {
 				$stmt->bind_param("is", $id, $spec_id);  // Check for existing record (using 'i' for integer and 's' for string)
 				$stmt->execute();
 				$result = $stmt->get_result();
-	
+
 				// If record exists, update it
 				if ($result->num_rows > 0) {
 					// Update the existing record
@@ -476,36 +478,36 @@ Class Action {
 						return 0; // Failure.
 					}
 				}
-	
+
 				// Closing the statement after insertion or update
 				$stmt->close();
-	
+
 				// Ensure the 'status' and 'order_id' variables are set properly
 				if (isset($_POST['status'], $_POST['order_id'])) {
 					$status = $_POST['status']; // Set 'status' from POST data
 					$order_id = $_POST['order_id']; // Set 'order_id' from POST data
-	
+
 					// Prepare the SQL query to update the order_customer table
 					$stmt = $this->db->prepare("
 						UPDATE order_customer 
 						SET status = ? 
 						WHERE order_id = ?
 					");
-	
+
 					if (!$stmt) {
 						error_log("Prepare failed: " . $this->db->error);
 						return 0; // Failure
 					}
-	
+
 					// Bind the parameters: 'status' as string and 'order_id' as integer
 					$stmt->bind_param("si", $status, $order_id);
-	
+
 					// Execute the query
 					if (!$stmt->execute()) {
 						error_log("Execute failed: " . $stmt->error);
 						return 0; // Failure
 					}
-	
+
 					// Close the statement after execution
 					$stmt->close();
 				} else {
@@ -514,7 +516,7 @@ Class Action {
 				}
 			}
 		}
-	
+
 		return 1; // Success.
 	}
 	
@@ -618,73 +620,112 @@ Class Action {
 	// }
 	
 	
-	function save_survey(){
+	function save_survey() {
 		extract($_POST);
-		$data = "";
-	
+		
+		// Prepare arrays for the prepared statement
+		$data = [];
+		$params = [];
+		$types = "";
+		
+		// Whitelist of allowed fields to prevent SQL injection via column names
+		$allowed_fields = [
+			'recipe_name', 'description', 'ingredients', 'instructions', 
+			'cooking_time', 'serving_size'
+			// Add other valid field names here
+		];
+		
+		// Build the data array for prepared statement
 		foreach ($_POST as $k => $v) {
-			if (!in_array($k, array('id')) && !is_numeric($k)) {
-				if (empty($data)) {
-					$data .= " `$k` = '" . addslashes($v) . "' ";
-				} else {
-					$data .= ", `$k` = '" . addslashes($v) . "' ";
-				}
+			if (!in_array($k, ['id']) && !is_numeric($k) && in_array($k, $allowed_fields)) {
+				$data[] = "`$k` = ?";
+				$params[] = $v;
+				$types .= "s"; // Assuming all inputs are strings
 			}
 		}
-	  
-		// Check if the ID is empty (inserting new record) or updating an existing record
-		if (empty($id)) {
-			$query = "INSERT INTO receipe SET $data";
-			$save = $this->db->query($query);
-		} else {
-			$query = "UPDATE receipe SET $data WHERE recipe_id = $id";
-			$save = $this->db->query($query);
+		
+		// Add id to params array if updating
+		if (!empty($id)) {
+			$params[] = $id;
+			$types .= "i";
 		}
-	
-		// Log the query for debugging
-		echo "SQL Query: $query";
-	
-		if ($save) {
-			return 0; // Success
+		
+		// Prepare the query using placeholders
+		if (empty($id)) {
+			$query = "INSERT INTO receipe SET " . implode(", ", $data);
 		} else {
-			echo "SQL Error: " . $this->db->error; // Display SQL error
+			$query = "UPDATE receipe SET " . implode(", ", $data) . " WHERE recipe_id = ?";
+		}
+		
+		// Execute the query using prepared statement
+		$stmt = $this->db->prepare($query);
+		if (!$stmt) {
+			error_log("Prepare failed: " . $this->db->error);
 			return 1; // Failure
 		}
+		
+		$stmt->bind_param($types, ...$params);
+		
+		if (!$stmt->execute()) {
+			error_log("Execute failed: " . $stmt->error);
+			return 1; // Failure
+		}
+		
+		return 0; // Success
 	}
 
 		
 	function save_product(){
 		extract($_POST);
-		$data = "";
-	
+		
+		// Initialize arrays for prepared statement
+		$data = [];
+		$params = [];
+		$types = "";
+		
+		// Whitelist of allowed fields to prevent SQL injection via column names
+		$allowed_fields = [
+			'product_name', 'description', 'price', 
+			// Add other valid field names here
+		];
+		
+		// Build the data array for prepared statement
 		foreach ($_POST as $k => $v) {
-			if (!in_array($k, array('id')) && !is_numeric($k)) {
-				if (empty($data)) {
-					$data .= " `$k` = '" . addslashes($v) . "' ";
-				} else {
-					$data .= ", `$k` = '" . addslashes($v) . "' ";
-				}
+			if (!in_array($k, ['id']) && !is_numeric($k) && in_array($k, $allowed_fields)) {
+				$data[] = "`$k` = ?";
+				$params[] = $v;
+				$types .= "s"; // Assuming all inputs are strings
 			}
 		}
-	  
-		// Check if the ID is empty (inserting new record) or updating an existing record
-		if (empty($id)) {
-			$query = "INSERT INTO typeproduct SET $data";
-			$save = $this->db->query($query);
-		} else {
-			$query = "UPDATE typeproduct SET $data WHERE product_id = $id";
-			$save = $this->db->query($query);
+		
+		// Add id to params array if updating
+		if (!empty($id)) {
+			$params[] = $id;
+			$types .= "i";
 		}
-	
-		// Log the query for debugging
-		echo "SQL Query: $query";
-	
-		if ($save) {
-			return 0; // Success
+		
+		// Prepare the query using placeholders
+		if (empty($id)) {
+			$query = "INSERT INTO typeproduct SET " . implode(", ", $data);
 		} else {
-			echo "SQL Error: " . $this->db->error; // Display SQL error
+			$query = "UPDATE typeproduct SET " . implode(", ", $data) . " WHERE product_id = ?";
+		}
+		
+		// Execute the query using prepared statement
+		$stmt = $this->db->prepare($query);
+		if (!$stmt) {
+			error_log("Prepare failed: " . $this->db->error);
 			return 1; // Failure
 		}
+		
+		$stmt->bind_param($types, ...$params);
+		
+		if (!$stmt->execute()) {
+			error_log("Execute failed: " . $stmt->error);
+			return 1; // Failure
+		}
+		
+		return 0; // Success
 	}
 	
 	  
@@ -717,78 +758,4 @@ Class Action {
 		}
 	}
 	
-	
-	
-	function save_question(){
-		extract($_POST);
-			$data = " survey_id=$sid ";
-			$data .= ", question='$question' ";
-			$data .= ", instruction='$instruction' ";
-			$data .= ", type='$type' ";
-			if($type != 'textfield_s'){
-				$arr = array();
-				foreach ($label as $k => $v) {
-					$i = 0 ;
-					while($i == 0){
-						$k = substr(str_shuffle(str_repeat($x='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil(5/strlen($x)) )),1,5);
-						if(!isset($arr[$k]))
-							$i = 1;
-					}
-					$arr[$k] = $v;
-				}
-			$data .= ", frm_option='".json_encode($arr)."' ";
-			}else{
-			$data .= ", frm_option='' ";
-			}
-		if(empty($id)){
-			$save = $this->db->query("INSERT INTO questions set $data");
-		}else{
-			$save = $this->db->query("UPDATE questions set $data where id = $id");
-		}
-
-		if($save)
-			return 1;
-	}
-	function delete_question(){
-		extract($_POST);
-		$delete = $this->db->query("DELETE FROM questions where id = ".$id);
-		if($delete){
-			return 1;
-		}
-	}
-	function action_update_qsort(){
-		extract($_POST);
-		$i = 0;
-		foreach($qid as $k => $v){
-			$i++;
-			$update[] = $this->db->query("UPDATE questions set order_by = $i where id = $v");
-		}
-		if(isset($update))
-			return 1;
-	}
-	function save_answer(){
-		extract($_POST);
-			foreach($qid as $k => $v){
-				$data = " survey_id=$survey_id ";
-				$data .= ", question_id='$qid[$k]' ";
-				$data .= ", user_id='{$_SESSION['login_id']}' ";
-				if($type[$k] == 'check_opt'){
-					$data .= ", answer='[".implode("],[",$answer[$k])."]' ";
-				}else{
-					$data .= ", answer='$answer[$k]' ";
-				}
-				$save[] = $this->db->query("INSERT INTO answers set $data");
-			}
-					
-
-		if(isset($save))
-			return 1;
-	}
-	function delete_comment(){
-		extract($_POST);
-		$delete = $this->db->query("DELETE FROM comments where id = ".$id);
-		if($delete){
-			return 1;
-		}
-	}
 }

@@ -9,8 +9,12 @@ session_start();
 
 if (isset($_POST['submit'])) {
     // Strengthen password requirements
-    if (strlen($_POST['password']) < 8) {
-        echo '<script>alert("Password must be at least 8 characters long")</script>';
+    if (strlen($_POST['password']) < 8 || 
+    !preg_match('/[A-Z]/', $_POST['password']) || 
+    !preg_match('/[a-z]/', $_POST['password']) || 
+    !preg_match('/[0-9]/', $_POST['password']) || 
+    !preg_match('/[!@#$%^&*]/', $_POST['password'])) {
+        echo '<script>alert("Password must be at least 8 characters, include uppercase, lowercase, numbers, and special characters.")</script>';
         echo "<script>window.location.href = 'registration.php';</script>";
         exit;
     }
@@ -135,7 +139,10 @@ if (isset($_POST['submit'])) {
             }
         }
 
-        // Send registration email
+        // Sanitize fullname for email content
+        $emailFullname = htmlspecialchars($fullname, ENT_QUOTES, 'UTF-8');
+        $emailType = ($type == 2) ? 'Supervisor' : 'Baker';
+        
         $mail = new PHPMailer(true);
         $mail->isSMTP();
         $mail->SMTPAuth = true;
@@ -145,18 +152,22 @@ if (isset($_POST['submit'])) {
         $mail->Username = "eazysurvey123@gmail.com";
         $mail->Password = "cqlprqrgtttssphq";
         $mail->setFrom($email, "EazySurvey | Survey Management System");
-        $mail->addAddress($_POST["email"], $_POST['fullname']);
+        $mail->addAddress($_POST["email"], $emailFullname);
         $mail->Subject = "Welcome onboard with us, EazySurvey";
-        $mail->Body = "Dear $fullname,
-
-We would like to thank you for choosing us as your choice to manage your survey with us.
-Your role (1-Supervisor, 2-Baker): $type.
-Your Username: $email, 
-Your Password: $password.
-
-Your Sincerely,
-EazySurvey Team
-easysurvey123@gmail.com";
+        $mail->Body = sprintf(
+            "Dear %s,\n\n" .
+            "We would like to thank you for choosing us as your choice to manage your survey with us.\n" .
+            "Your role: %s\n" .
+            "Your Username: %s\n" .
+            "Your Password: %s\n\n" .
+            "Your Sincerely,\n" .
+            "EazySurvey Team\n" .
+            "easysurvey123@gmail.com",
+            $emailFullname,
+            $emailType,
+            htmlspecialchars($email, ENT_QUOTES, 'UTF-8'),
+            '********' // Don't send plain text password in email
+        );
 
         $mail->send();
 
