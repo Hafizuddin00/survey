@@ -89,6 +89,14 @@
                 Recipe Management  
               </p>
             </a>
+          </li>
+          <li class="nav-item">
+            <a href="./index.php?page=order_log" class="nav-link nav-order_log">
+              <i class="nav-icon fa fa-folder"></i>
+              <p>
+                Production Report  
+              </p>
+            </a>
           </li>  
           <li class="nav-item">
             <a href="./index.php?page=aboutus_settings" class="nav-link nav-page-settings">
@@ -120,6 +128,14 @@
               <i class="nav-icon fa fa-folder"></i>
               <p>
                 Recipe Management  
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="./index.php?page=order_log" class="nav-link nav-order_log">
+              <i class="nav-icon fa fa-folder"></i>
+              <p>
+                Production Report  
               </p>
             </a>
           </li> 

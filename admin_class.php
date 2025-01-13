@@ -370,7 +370,7 @@ Class Action {
 				// Update equipment_details.
 				$stmt = $this->db->prepare("
 					UPDATE equipment_details 
-					SET eq_used = eq_used + ?, eq_not_used = eq_not_used - ?
+					SET eq_used = eq_used + ?, eq_not_used = eq_not_used - ? 
 					WHERE spec_id = ?
 				");
 				if (!$stmt) {
@@ -385,72 +385,99 @@ Class Action {
 	
 				$stmt->close();
 	
-				// Insert record into equipment_record table.
+				// Insert record into equipment_record table or update it if it exists.
 				if (!isset($id)) {
 					echo "Error: Record 'id' is missing.";
 					return 0; // Failure.
 				}
 	
+				// Check if the record exists in equipment_record table
 				$stmt = $this->db->prepare("
-					INSERT INTO equipment_record (id, spec_id, eq_used) 
-					VALUES (?, ?, ?)
+					SELECT id FROM equipment_record WHERE id = ? AND spec_id = ?
 				");
 				if (!$stmt) {
 					error_log("Prepare failed: " . $this->db->error);
 					return 0; // Failure.
 				}
-				$stmt->bind_param("isi", $id, $spec_id, $used_qty);
-				if (!$stmt->execute()) {
-					error_log("Execute failed: " . $stmt->error);
-					return 0; // Failure.
+				$stmt->bind_param("is", $id, $spec_id);  // Check for existing record (using 'i' for integer and 's' for string)
+				$stmt->execute();
+				$result = $stmt->get_result();
+	
+				// If record exists, update it
+				if ($result->num_rows > 0) {
+					// Update the existing record
+					$stmt = $this->db->prepare("
+						UPDATE equipment_record 
+						SET eq_used = eq_used + ? 
+						WHERE id = ? AND spec_id = ?
+					");
+					if (!$stmt) {
+						error_log("Prepare failed: " . $this->db->error);
+						return 0; // Failure.
+					}
+					$stmt->bind_param("iis", $used_qty, $id, $spec_id);  // 'i' for integer, 's' for string
+					if (!$stmt->execute()) {
+						error_log("Execute failed: " . $stmt->error);
+						return 0; // Failure.
+					}
+				} else {
+					// If no record exists, insert a new record
+					$stmt = $this->db->prepare("
+						INSERT INTO equipment_record (id, spec_id, eq_used) 
+						VALUES (?, ?, ?)
+					");
+					if (!$stmt) {
+						error_log("Prepare failed: " . $this->db->error);
+						return 0; // Failure.
+					}
+					$stmt->bind_param("isi", $id, $spec_id, $used_qty);  // 'i' for integer, 's' for string
+					if (!$stmt->execute()) {
+						error_log("Execute failed: " . $stmt->error);
+						return 0; // Failure.
+					}
 				}
-				
-				// Closing the statement after insertion.
+	
+				// Closing the statement after insertion or update
 				$stmt->close();
-
-				  // Ensure the 'status' and 'order_id' variables are set properly
-			if (isset($_POST['status'], $_POST['order_id'])) {
-				$status = $_POST['status']; // Set 'status' from POST data
-				$order_id = $_POST['order_id']; // Set 'order_id' from POST data
-
-				// Prepare the SQL query to update the order_customer table
-				$stmt = $this->db->prepare("
-					UPDATE order_customer 
-					SET status = ? 
-					WHERE order_id = ?
-				");
-
-				if (!$stmt) {
-					error_log("Prepare failed: " . $this->db->error);
+	
+				// Ensure the 'status' and 'order_id' variables are set properly
+				if (isset($_POST['status'], $_POST['order_id'])) {
+					$status = $_POST['status']; // Set 'status' from POST data
+					$order_id = $_POST['order_id']; // Set 'order_id' from POST data
+	
+					// Prepare the SQL query to update the order_customer table
+					$stmt = $this->db->prepare("
+						UPDATE order_customer 
+						SET status = ? 
+						WHERE order_id = ?
+					");
+	
+					if (!$stmt) {
+						error_log("Prepare failed: " . $this->db->error);
+						return 0; // Failure
+					}
+	
+					// Bind the parameters: 'status' as string and 'order_id' as integer
+					$stmt->bind_param("si", $status, $order_id);
+	
+					// Execute the query
+					if (!$stmt->execute()) {
+						error_log("Execute failed: " . $stmt->error);
+						return 0; // Failure
+					}
+	
+					// Close the statement after execution
+					$stmt->close();
+				} else {
+					error_log("Error: 'status' or 'order_id' is not set.");
 					return 0; // Failure
 				}
-
-				// Bind the parameters: 'status' as string and 'order_id' as integer
-				$stmt->bind_param("si", $status, $order_id);
-
-				// Execute the query
-				if (!$stmt->execute()) {
-					error_log("Execute failed: " . $stmt->error);
-					return 0; // Failure
-				}
-
-				// Close the statement after execution
-				$stmt->close();
-
-				
-			} else {
-				error_log("Error: 'status' or 'order_id' is not set.");
-				return 0; // Failure
-			}
-
-
-
-						
 			}
 		}
 	
 		return 1; // Success.
 	}
+	
 	
 	
 	// function save_categories() {
