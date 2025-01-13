@@ -1,7 +1,7 @@
 
 html {
-  font-family: sans-serif;
-  -webkit-text-size-adjust: 100%;
+  font-family: 'Times New Roman', Times, serif;
+  -webkit-text-size-adjust: 100;
       -ms-text-size-adjust: 100%;
 }
 body {
@@ -49,10 +49,10 @@ abbr[title] {
 }
 b,
 strong {
-  font-weight: bold;
+  font-weight: normal;
 }
 dfn {
-  font-style: italic;
+  font-style: normal;
 }
 h1 {
   margin: .67em 0;

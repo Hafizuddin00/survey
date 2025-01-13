@@ -1,8 +1,15 @@
-<?php include 'db_connect.php' ?>
+<?php require_once 'db_connect.php'; 
+require_once 'process_finished.php'; 
+
+
+?>
 <div class="col-lg-12">
 	<div class="card card-outline card-success">
 		<div class="card-header">
         <a class="btn btn btn-sm btn-warning btn-flat" href="./index.php?page=present_timetable"><i class="fa fa-table"></i> Timetable</a>
+        <button class="btn btn-sm btn-primary btn-flat view_equipment" type="button" data-toggle="modal" data-target="#myModal">
+    <i class="fa fa-eye"></i> View Equipment
+</button>
 		<a class="btn btn btn-sm btn-primary btn-flat" href="./index.php?page=schedule_production"><i class="fa fa-plus"></i> Schedule Production</a>
         <a class="btn btn-sm btn-danger btn-flat" href="javascript:void(0)" id="delete_all_data">
         <i class="fa fa-trash"></i> Delete All Record
@@ -34,7 +41,7 @@
                         while($row = $qry->fetch_assoc()):
                         ?>
                         <tr>
-                            <th class="text-center" style="width: 10px;"><?php echo $i++ ?></th>
+                            <th class="text-center" style="width: 10px;" font-weight = "normal"><?php echo $i++ ?></th>
                             <td style="width: 10px;"><b><?php echo $row['id'] ?></b></td>
                             <td style="width: 10px;"><b><?php echo ucwords($row['recipe_name']) ?></b></td>
                             <td style="width: 10px;"><b><?php echo $row['qty_product'] ?></b></td>
@@ -67,7 +74,30 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="myModal">
+							<div class="modal-dialog modal-dialog-centered modal-lg">
+								<div class="modal-content">
+									<!-- Modal Header -->
+									<div class="modal-header">
+										<h4 class="modal-title">Equipment</h4>
+										<button type="button" class="close" data-dismiss="modal">&times;</button>
+									</div>
 
+									<!-- Modal Body -->
+									<div class="modal-body">
+										<?php include 'view_equipment.php'; ?>
+									</div>
+
+									<!-- Modal Footer -->
+									<div class="modal-footer">
+										<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- Add jQuery and Bootstrap JS at the end of your HTML -->
+						 
 <script>
     $(document).ready(function(){
         $('#list').dataTable();
@@ -146,6 +176,9 @@
             }
         });
     }
+    src="https://code.jquery.com/jquery-3.5.1.slim.min.js" ;
+	src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js" ;
+	src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" ;
 </script>
 
 <style>

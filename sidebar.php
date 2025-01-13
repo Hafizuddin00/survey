@@ -67,10 +67,10 @@
             </ul>
           </li>
           <li class="nav-item">
-            <a href="./index.php?page=inbox" class="nav-link nav-inbox">
+            <a href="./index.php?page=order_message" class="nav-link nav-order_message">
               <i class="nav-icon fas fa-envelope"></i>
               <p>
-                Inbox
+                Order Message
               </p>
             </a>
           </li>
@@ -89,6 +89,14 @@
                 Recipe Management  
               </p>
             </a>
+          </li>
+          <li class="nav-item">
+            <a href="./index.php?page=order_log" class="nav-link nav-order_log">
+              <i class="nav-icon fa fa-folder"></i>
+              <p>
+                Production Report  
+              </p>
+            </a>
           </li>  
           <li class="nav-item">
             <a href="./index.php?page=aboutus_settings" class="nav-link nav-page-settings">
@@ -100,10 +108,10 @@
           </li>  
           <?php elseif($_SESSION['login_type'] == 2): ?>
             <li class="nav-item">
-            <a href="./index.php?page=inbox" class="nav-link nav-inbox">
+            <a href="./index.php?page=order_message" class="nav-link nav-order_message">
               <i class="nav-icon fas fa-envelope"></i>
               <p>
-                Inbox
+                Order Message
               </p>
             </a>
           </li>
@@ -120,6 +128,14 @@
               <i class="nav-icon fa fa-folder"></i>
               <p>
                 Recipe Management  
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="./index.php?page=order_log" class="nav-link nav-order_log">
+              <i class="nav-icon fa fa-folder"></i>
+              <p>
+                Production Report  
               </p>
             </a>
           </li> 
