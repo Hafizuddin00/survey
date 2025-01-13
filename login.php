@@ -62,7 +62,7 @@ header("location:index.php?page=home");
 					<input type="password" id="password" name="password" class="form-control form-control-sm">
 					</div>
 					<center>
-					<button class="btn-sm btn-block btn-wave col-md-4 btn-primary">Login</button>
+					<button type="submit" class="btn-sm btn-block btn-wave col-md-4 btn-primary">Login</button>
 					</center>
 					<a href="forgot-password.php" class="auth-link text-black">Forgot password?</a>
 				</form>
@@ -93,10 +93,10 @@ header("location:index.php?page=home");
 			},
 			success:function(resp){
 				if(resp != 1){
-					location.href ='index.php?page=home';
-				}else{
 					$('#login-form').prepend('<div class="alert alert-danger">Username or password is incorrect.</div>')
 					$('#login-form button[type="button"]').removeAttr('disabled').html('Login');
+				}else{
+					location.href ='index.php?page=home';
 				}
 			}
 		})

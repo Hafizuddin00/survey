@@ -3,7 +3,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <?php 
   ob_start();
-  $title = isset($_GET['page']) ? ucwords(str_replace("_", ' ', $_GET['page'])) : "Home";
+  $title = isset($_GET['page']) ? htmlspecialchars(ucwords(str_replace("_", ' ', $_GET['page'])), ENT_QUOTES, 'UTF-8') : "Home";
   ?>
   <title><?php echo $title ?> | Production System</title>
   <?php ob_end_flush() ?>

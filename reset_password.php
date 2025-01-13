@@ -44,14 +44,17 @@ $chngpwd1->execute();
   $mail->setFrom($email, "EazySurvey | Survey Management System");
   $mail->addAddress($_POST["email"]);
   
-  $mail->Subject = "Your password has changed successfully";
-  $mail->Body = "Dear $email,
+  // Sanitize email for display in the message
+  $displayEmail = htmlspecialchars($email, ENT_QUOTES, 'UTF-8');
 
-Your password has been changed successfully. If you did not change your password, please contact us immediately through the below email.Thank You
+  $mail->Subject = "Your password has changed successfully";
+  $mail->Body = sprintf("Dear %s,
+
+Your password has been changed successfully. If you did not change your password, please contact us immediately through the below email. Thank You
 
 Your Sincerely
 EazySurvey Team 
-easysurvey123@gmail.com";
+easysurvey123@gmail.com", $displayEmail);
   
 $mail->send();
 echo "<script>alert('You have changed your password Successfully');</script>";

@@ -68,8 +68,11 @@ try {
 
     $stmt_finished->close();
 } catch (Exception $e) {
-    // Log the error and display a generic message
-    echo '<script>alert("Error: ' . $e->getMessage() . '");</script>';
+    // Log the detailed error message securely
+    error_log("Database Error: " . $e->getMessage());
+    
+    // Display only a generic message to the user
+    echo '<script>alert("An error occurred while processing the request.");</script>';
     echo "An error occurred while processing the records. Please try again later.";
 }
 
