@@ -6,178 +6,141 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 
 if (isset($_POST['submit'])) {
-    try {
-        // Start transaction
-        $dbh->beginTransaction();
+    // Retrieve form data
+    // Sanitize and validate user inputs
+    $fullname = htmlspecialchars(trim($_POST['fullname']), ENT_QUOTES, 'UTF-8');
+    $email = filter_var(trim($_POST['email']), FILTER_SANITIZE_EMAIL);
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        echo '<script>alert("Invalid email address.")</script>';
+        echo "<script>window.location.href = 'registration.php';</script>";
+        exit;
+    }
+    
+    $password = md5($_POST['password']);
+    $type = $_POST['type'];
 
-        // Validate and sanitize user inputs
-        $fullname = htmlspecialchars(trim($_POST['fullname']), ENT_QUOTES, 'UTF-8');
-        $email = filter_var(trim($_POST['email']), FILTER_SANITIZE_EMAIL);
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            throw new Exception("Invalid email address.");
+    // Get all staff_id values from staff_information
+    $staffSQL = "SELECT staff_id FROM staff_information";
+    $staffQuery = $dbh->prepare($staffSQL);
+    $staffQuery->execute();
+    $staffIds = $staffQuery->fetchAll(PDO::FETCH_ASSOC);
+
+    // Check if staff_id 100005 is already assigned to a supervisor
+    if ($type == 2) { // Supervisor role
+        $checkSupervisorSQL = "SELECT COUNT(*) AS supervisorCount FROM users WHERE staff_id = 100005";
+        $checkSupervisorQuery = $dbh->prepare($checkSupervisorSQL);
+        $checkSupervisorQuery->execute();
+        $supervisorAssigned = $checkSupervisorQuery->fetch(PDO::FETCH_ASSOC);
+
+        if ($supervisorAssigned['supervisorCount'] > 0) {
+            // If staff_id 100005 is already assigned, show an error message
+            echo '<script>alert("The Supervisor is already assigned. Please contact the administrator for add new account.")</script>';
+            echo "<script>window.location.href = 'registration.php';</script>";
+            exit; // Stop further execution
         }
+    }
 
-        // Validate user type
-        $type = filter_var($_POST['type'], FILTER_VALIDATE_INT);
-        if (!in_array($type, [2, 3])) {
-            throw new Exception("Invalid user type selected.");
+    // For Baker, check if 4 Bakers are already assigned
+    if ($type == 3) { // Baker role
+        $checkBakerSQL = "SELECT COUNT(*) AS bakerCount FROM users WHERE type = 3";
+        $checkBakerQuery = $dbh->prepare($checkBakerSQL);
+        $checkBakerQuery->execute();
+        $bakerAssigned = $checkBakerQuery->fetch(PDO::FETCH_ASSOC);
+
+        if ($bakerAssigned['bakerCount'] >= 5) {
+            // If 4 Bakers are already assigned, show an error message
+            echo '<script>alert("Maximum of 4 Bakers have been assigned. Please contact the administrator to add more.")</script>';
+            echo "<script>window.location.href = 'registration.php';</script>";
+            exit; // Stop further execution
         }
+    }
 
-        // Use secure password hashing
-        $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+    // Proceed with the registration if staff_id 100005 is not assigned or user is not a supervisor
+    $sql = "INSERT INTO users (fullname, email, password, type) VALUES (:fullname, :email, :password, :type)";
+    $query = $dbh->prepare($sql);
+    $query->bindParam(':fullname', $fullname, PDO::PARAM_STR);
+    $query->bindParam(':email', $email, PDO::PARAM_STR);
+    $query->bindParam(':password', $password, PDO::PARAM_STR);
+    $query->bindParam(':type', $type, PDO::PARAM_STR);
+    $query->execute();
 
-        // Check if email already exists
-        $checkEmailSQL = "SELECT COUNT(*) FROM users WHERE email = :email";
-        $checkEmailQuery = $dbh->prepare($checkEmailSQL);
-        $checkEmailQuery->bindParam(':email', $email, PDO::PARAM_STR);
-        if (!$checkEmailQuery->execute()) {
-            throw new Exception("Error checking email existence.");
-        }
-        if ($checkEmailQuery->fetchColumn() > 0) {
-            throw new Exception("Email already registered.");
-        }
+    $LastInsertId = $dbh->lastInsertId(); // Get the last inserted ID in the users table
 
-        // Get all staff_id values
-        $staffSQL = "SELECT staff_id FROM staff_information WHERE user_id IS NULL";
-        $staffQuery = $dbh->prepare($staffSQL);
-        if (!$staffQuery->execute()) {
-            throw new Exception("Failed to fetch available staff IDs.");
-        }
-        $staffIds = $staffQuery->fetchAll(PDO::FETCH_ASSOC);
-        if (empty($staffIds)) {
-            throw new Exception("No staff IDs available. Please contact administrator.");
-        }
-
-        // Supervisor validation
-        if ($type == 2) {
-            $checkSupervisorSQL = "SELECT COUNT(*) FROM users WHERE staff_id = 100005";
-            $checkSupervisorQuery = $dbh->prepare($checkSupervisorSQL);
-            if (!$checkSupervisorQuery->execute()) {
-                throw new Exception("Failed to check supervisor status.");
-            }
-            if ($checkSupervisorQuery->fetchColumn() > 0) {
-                throw new Exception("The Supervisor is already assigned. Please contact the administrator.");
-            }
-        }
-
-        // Baker validation
-        if ($type == 3) {
-            $checkBakerSQL = "SELECT COUNT(*) FROM users WHERE type = 3";
-            $checkBakerQuery = $dbh->prepare($checkBakerSQL);
-            if (!$checkBakerQuery->execute()) {
-                throw new Exception("Failed to check baker count.");
-            }
-            if ($checkBakerQuery->fetchColumn() >= 4) {
-                throw new Exception("Maximum number of Bakers (4) has been reached.");
-            }
-        }
-
-        // Insert new user
-        $sql = "INSERT INTO users (fullname, email, password, type) VALUES (:fullname, :email, :password, :type)";
-        $query = $dbh->prepare($sql);
-        $query->bindParam(':fullname', $fullname, PDO::PARAM_STR);
-        $query->bindParam(':email', $email, PDO::PARAM_STR);
-        $query->bindParam(':password', $password, PDO::PARAM_STR);
-        $query->bindParam(':type', $type, PDO::PARAM_INT);
-        
-        if (!$query->execute()) {
-            throw new Exception("Failed to create user account.");
-        }
-
-        $LastInsertId = $dbh->lastInsertId();
-
-        // Assign staff ID based on role
-        if ($type == 2) {
-            // Supervisor assignment
+    if ($LastInsertId > 0) {
+        if ($type == 2) { // Supervisor
+            // Assign staff_id = 100005 to the supervisor
             $updateSQL = "UPDATE users SET staff_id = 100005 WHERE id = :user_id";
             $updateQuery = $dbh->prepare($updateSQL);
             $updateQuery->bindParam(':user_id', $LastInsertId, PDO::PARAM_INT);
-            if (!$updateQuery->execute()) {
-                throw new Exception("Failed to assign supervisor staff ID.");
-            }
+            $updateQuery->execute();
 
-            // Update staff_information
+            // Update the staff_information table with the user_id for staff_id = 100005
             $updateStaffSQL = "UPDATE staff_information SET user_id = :user_id WHERE staff_id = 100005";
             $updateStaffQuery = $dbh->prepare($updateStaffSQL);
             $updateStaffQuery->bindParam(':user_id', $LastInsertId, PDO::PARAM_INT);
-            if (!$updateStaffQuery->execute()) {
-                throw new Exception("Failed to update staff information for supervisor.");
-            }
-        } else {
-            // Baker assignment
-            $staffAssigned = false;
+            $updateStaffQuery->execute();
+        } else { // Baker
+            // Assign any available staff_id other than 100005
             foreach ($staffIds as $staff) {
                 if ($staff['staff_id'] != 100005) {
                     $staff_id = $staff['staff_id'];
-                    
-                    // Update users table
-                    $updateSQL = "UPDATE users SET staff_id = :staff_id WHERE id = :user_id";
-                    $updateQuery = $dbh->prepare($updateSQL);
-                    $updateQuery->bindParam(':staff_id', $staff_id, PDO::PARAM_INT);
-                    $updateQuery->bindParam(':user_id', $LastInsertId, PDO::PARAM_INT);
-                    
-                    if ($updateQuery->execute()) {
-                        // Update staff_information
+                    // Check if this staff_id is already assigned to a user
+                    $checkStaffSQL = "SELECT COUNT(*) AS count FROM users WHERE staff_id = :staff_id";
+                    $checkStaffQuery = $dbh->prepare($checkStaffSQL);
+                    $checkStaffQuery->bindParam(':staff_id', $staff_id, PDO::PARAM_INT);
+                    $checkStaffQuery->execute();
+                    $staffAssigned = $checkStaffQuery->fetch(PDO::FETCH_ASSOC);
+
+                    if ($staffAssigned['count'] == 0) {
+                        // Assign the first available staff_id to the baker
+                        $updateSQL = "UPDATE users SET staff_id = :staff_id WHERE id = :user_id";
+                        $updateQuery = $dbh->prepare($updateSQL);
+                        $updateQuery->bindParam(':staff_id', $staff_id, PDO::PARAM_INT);
+                        $updateQuery->bindParam(':user_id', $LastInsertId, PDO::PARAM_INT);
+                        $updateQuery->execute();
+
+                        // Update the staff_information table with the user_id for the assigned staff_id
                         $updateStaffSQL = "UPDATE staff_information SET user_id = :user_id WHERE staff_id = :staff_id";
                         $updateStaffQuery = $dbh->prepare($updateStaffSQL);
                         $updateStaffQuery->bindParam(':user_id', $LastInsertId, PDO::PARAM_INT);
                         $updateStaffQuery->bindParam(':staff_id', $staff_id, PDO::PARAM_INT);
-                        
-                        if ($updateStaffQuery->execute()) {
-                            $staffAssigned = true;
-                            break;
-                        }
+                        $updateStaffQuery->execute();
+
+                        break; // Exit the loop once we've assigned an available staff_id
                     }
                 }
-            }
-            
-            if (!$staffAssigned) {
-                throw new Exception("Failed to assign staff ID to baker.");
             }
         }
 
         // Send registration email
-        try {
-            $mail = new PHPMailer(true);
-            $mail->isSMTP();
-            $mail->SMTPAuth = true;
-            $mail->Host = "smtp.gmail.com";
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-            $mail->Port = 587;
-            $mail->Username = "eazysurvey123@gmail.com";
-            $mail->Password = "cqlprqrgtttssphq";
-            $mail->setFrom("eazysurvey123@gmail.com", "EazySurvey | Survey Management System");
-            $mail->addAddress($email, $fullname);
-            $mail->Subject = "Welcome onboard with us, EazySurvey";
-            $mail->Body = "Dear $fullname,
+        $mail = new PHPMailer(true);
+        $mail->isSMTP();
+        $mail->SMTPAuth = true;
+        $mail->Host = "smtp.gmail.com";
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port = 587;
+        $mail->Username = "eazysurvey123@gmail.com";
+        $mail->Password = "cqlprqrgtttssphq";
+        $mail->setFrom($email, "EazySurvey | Survey Management System");
+        $mail->addAddress($_POST["email"], $_POST['fullname']);
+        $mail->Subject = "Welcome onboard with us, EazySurvey";
+        $mail->Body = "Dear $fullname,
 
 We would like to thank you for choosing us as your choice to manage your survey with us.
-Your role: " . ($type == 2 ? "Supervisor" : "Baker") . "
-Your Username: $email
-Please login to set up your password.
+Your role (1-Supervisor, 2-Baker): $type.
+Your Username: $email, 
+Your Password: $password.
 
 Your Sincerely,
 EazySurvey Team
 easysurvey123@gmail.com";
 
-            $mail->send();
-        } catch (Exception $e) {
-            error_log("Failed to send email: " . $e->getMessage());
-            // Continue with registration even if email fails
-        }
+        $mail->send();
 
-        // Commit transaction
-        $dbh->commit();
-        
         echo '<script>alert("Successfully Registered. Thank You for joining us")</script>';
         echo "<script>window.location.href ='login.php'</script>";
-        
-    } catch (Exception $e) {
-        // Rollback transaction on error
-        $dbh->rollBack();
-        error_log("Registration error: " . $e->getMessage());
-        echo '<script>alert("' . htmlspecialchars($e->getMessage(), ENT_QUOTES) . '")</script>';
-        echo "<script>window.location.href = 'registration.php';</script>";
+    } else {
+        echo '<script>alert("Something Went Wrong. Please try again")</script>';
     }
 }
 ?>
