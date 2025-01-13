@@ -21,41 +21,43 @@ Class Action {
 	}
 
 	function login() {
-		session_start(); // Ensure the session is started
-		extract($_POST);
-	
-		// Query for the user based on email and password only
-		$qry = $this->db->query("
+		session_start();
+		
+		// Use prepared statements to prevent SQL injection
+		$stmt = $this->db->prepare("
 			SELECT *, CONCAT(fullname) AS name 
 			FROM users 
-			WHERE email = '".$email."' 
-			  AND password = '".md5($password)."'
+			WHERE email = ?
 		");
-	
-		if ($qry->num_rows > 0) {
-			$user = $qry->fetch_array(); // Fetch the single matched user record
-	
-			// Debug: Log the user array
-			error_log(print_r($user, true));
-	
-			foreach ($user as $key => $value) {
-				if ($key != 'password' && !is_numeric($key)) {
-					$_SESSION['login_' . $key] = $value; // Store user details in the session
-				}
-			}
-	
-			// Assign the staff_id to session if it exists in the user array
-			if (isset($user['staff_id'])) {
-				$_SESSION['login_staff_id'] = $user['staff_id']; // Extract the staff_id from the query result
-			} else {
-				// Debug: Log if staff_id is not found
-				error_log("staff_id not found in query result.");
-			}
-	
-			return 1; // Login successful
-		} else {
-			return 3; // Login failed
+		
+		if (!$stmt) {
+			error_log("Prepare failed: " . $this->db->error);
+			return 3;
 		}
+		
+		$stmt->bind_param("s", $_POST['email']);
+		$stmt->execute();
+		$result = $stmt->get_result();
+		
+		if ($result->num_rows > 0) {
+			$user = $result->fetch_array();
+			
+			// Verify password using password_verify()
+			if (password_verify($_POST['password'], $user['password'])) {
+				foreach ($user as $key => $value) {
+					if ($key != 'password' && !is_numeric($key)) {
+						$_SESSION['login_' . $key] = $value;
+					}
+				}
+				
+				if (isset($user['staff_id'])) {
+					$_SESSION['login_staff_id'] = $user['staff_id'];
+				}
+				
+				return 1; // Login successful
+			}
+		}
+		return 3; // Login failed
 	}
 	
 	
@@ -68,66 +70,104 @@ Class Action {
 		header("location:login.php");
 	}
 
-	function save_user()
-{
-    extract($_POST);
-    $data = "";
-    foreach ($_POST as $k => $v) {
-        if (!in_array($k, array('id', 'cpass')) && !is_numeric($k)) {
-            if ($k =='password') {
-                $v = md5($v);
-            }
-            if (empty($data)) {
-                $data .= " $k='$v' ";
-            } else {
-                $data .= ", $k='$v' ";
-            }
-        }
-    }
-
-    if (empty($id)) {
-        $save = $this->db->query("INSERT INTO users SET $data");
-    } else {
-        $save = $this->db->query("UPDATE users SET $data WHERE id = $id");
-    }
-
-    if ($save) {
-        return 1;
-    }
-}
-
-	function update_user(){
+	function save_user() {
 		extract($_POST);
-		$data = "";
-		foreach($_POST as $k => $v){
-			if(!in_array($k, array('id','cpass','table')) && !is_numeric($k)){
-				if($k =='password')
-					$v = md5($v);
-				if(empty($data)){
-					$data .= " $k='$v' ";
-				}else{
-					$data .= ", $k='$v' ";
+		$data = [];
+		$params = [];
+		$types = "";
+		
+		foreach ($_POST as $k => $v) {
+			if (!in_array($k, array('id', 'cpass')) && !is_numeric($k)) {
+				if ($k == 'password') {
+					$v = password_hash($v, PASSWORD_DEFAULT);
 				}
+				$data[] = "$k = ?";
+				$params[] = $v;
+				$types .= "s";
 			}
 		}
-		$check = $this->db->query("SELECT * FROM users where email ='$email' ".(!empty($id) ? " and id != {$id} " : ''))->num_rows;
-		if($check > 0){
-			return 2;
-			exit;
+		
+		if (empty($id)) {
+			$query = "INSERT INTO users SET " . implode(", ", $data);
+		} else {
+			$query = "UPDATE users SET " . implode(", ", $data) . " WHERE id = ?";
+			$params[] = $id;
+			$types .= "i";
 		}
-		if(empty($id)){
-			$save = $this->db->query("INSERT INTO users set $data");
-		}else{
-			$save = $this->db->query("UPDATE users set $data where id = $id");
+		
+		$stmt = $this->db->prepare($query);
+		if (!$stmt) {
+			error_log("Prepare failed: " . $this->db->error);
+			return 0;
 		}
+		
+		$stmt->bind_param($types, ...$params);
+		if ($stmt->execute()) {
+			return 1;
+		}
+		return 0;
+	}
 
-		if($save){
+	function update_user() {
+		extract($_POST);
+		$data = [];
+		$params = [];
+		$types = "";
+		
+		foreach ($_POST as $k => $v) {
+			if (!in_array($k, array('id', 'cpass', 'table')) && !is_numeric($k)) {
+				if ($k == 'password') {
+					$v = password_hash($v, PASSWORD_DEFAULT);
+				}
+				$data[] = "$k = ?";
+				$params[] = $v;
+				$types .= "s";
+			}
+		}
+		
+		// Check for duplicate email
+		$stmt = $this->db->prepare("SELECT * FROM users WHERE email = ? " . (!empty($id) ? "AND id != ?" : ""));
+		if (!$stmt) {
+			error_log("Prepare failed: " . $this->db->error);
+			return 0;
+		}
+		
+		if (!empty($id)) {
+			$stmt->bind_param("si", $email, $id);
+		} else {
+			$stmt->bind_param("s", $email);
+		}
+		
+		$stmt->execute();
+		if ($stmt->get_result()->num_rows > 0) {
+			return 2;
+		}
+		
+		// Update or insert user
+		if (empty($id)) {
+			$query = "INSERT INTO users SET " . implode(", ", $data);
+		} else {
+			$query = "UPDATE users SET " . implode(", ", $data) . " WHERE id = ?";
+			$params[] = $id;
+			$types .= "i";
+		}
+		
+		$stmt = $this->db->prepare($query);
+		if (!$stmt) {
+			error_log("Prepare failed: " . $this->db->error);
+			return 0;
+		}
+		
+		$stmt->bind_param($types, ...$params);
+		if ($stmt->execute()) {
 			foreach ($_POST as $key => $value) {
-				if($key != 'password' && !is_numeric($key))
-					$_SESSION['login_'.$key] = $value;
+				if ($key != 'password' && !is_numeric($key)) {
+					$_SESSION['login_' . $key] = $value;
+				}
 			}
 			return 1;
 		}
+		return 0;
 	}
 	function delete_user(){
 		extract($_POST);
