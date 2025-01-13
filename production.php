@@ -1,5 +1,7 @@
 <?php require_once 'db_connect.php'; 
 require_once 'process_finished.php'; 
+
+
 ?>
 <div class="col-lg-12">
 	<div class="card card-outline card-success">

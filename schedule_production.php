@@ -13,6 +13,8 @@ if (!isset($conn)) {
                     <div class="col-md-6 border-right">                        
                         <b class="text-muted">Production Information</b>
 
+
+
                         <div class="form-group">
                             <label for="order_id">Order ID *</label>
                             <select name="order_id" id="order_id" class="form-control form-control-sm">
@@ -91,10 +93,14 @@ if (!isset($conn)) {
                             });
                         </script>
 
+
+
+
                         <div class="form-group">
                             <label class="control-label">Quantity Product *</label>
                             <input type="number" name="qty_product" id="qty_product" class="form-control" required placeholder="Enter Quantity Product">
-							<br>
+							<small class="text-danger">-- Please add quantity more than user need for backup!</small>
+                            <br>
 							<b class="text-muted">Apply for resource allocation from Inventory System</b>
                         </div>
 
@@ -370,11 +376,26 @@ function updateEquipmentData() {
     });
 
 
-	$('#manage_categories').submit(function(e){
+	$('#manage_categories').submit(function(e) {
     e.preventDefault();
     $('input').removeClass("border-danger");
-    start_load();
     $('#response-message').html(''); // Clear any previous message
+
+    // Validate equipmentData
+    const equipmentDataInput = document.getElementById('equipment_data_input');
+    if (equipmentDataInput) {
+        const equipmentData = JSON.parse(equipmentDataInput.value);
+
+        // Check if any equipment has a quantity of 0
+        const invalidEquipment = equipmentData.find(equipment => equipment.qty === 0);
+
+        if (invalidEquipment) {
+            alert("User cannot apply this equipment because it is not available! Please choose another product or wait until other users finish using the equipment.");
+            return; // Stop form submission
+        }
+    }
+
+    start_load();
 
     $.ajax({
         url: 'ajax.php?action=save_categories', // Ensure this path is correct
@@ -383,11 +404,10 @@ function updateEquipmentData() {
         contentType: false,
         processData: false,
         method: 'POST',
-        success: function(resp){
-            if(resp == 1){
+        success: function(resp) {
+            if (resp == 1) {
                 alert_toast('Data successfully saved.', "success"); // Trigger the success toast
-                alert(JSON.stringify($('input[name="equipment_data"]').val(), null, 2)); // Display the equipment_data
-                setTimeout(function(){
+                setTimeout(function() {
                     location.replace('index.php?page=production');
                 }, 1500); // Give time for the toast to show
             } else {
@@ -396,7 +416,7 @@ function updateEquipmentData() {
                 $('#response-message').html('Failed to save the category.'); // Display error message on page
             }
         },
-        error: function(xhr, status, error){
+        error: function(xhr, status, error) {
             console.log('AJAX Error: ', status, error); // Log any AJAX errors
             $('#response-message').html('An error occurred while saving the category.');
         }
