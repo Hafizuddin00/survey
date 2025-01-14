@@ -9,8 +9,12 @@ session_start();
 
 if (isset($_POST['submit'])) {
     // Strengthen password requirements
-    if (strlen($_POST['password']) < 8) {
-        echo '<script>alert("Password must be at least 8 characters long")</script>';
+    if (strlen($_POST['password']) < 8 || 
+    !preg_match('/[A-Z]/', $_POST['password']) || 
+    !preg_match('/[a-z]/', $_POST['password']) || 
+    !preg_match('/[0-9]/', $_POST['password']) || 
+    !preg_match('/[!@#$%^&*]/', $_POST['password'])) {
+        echo '<script>alert("Password must be at least 8 characters, include uppercase, lowercase, numbers, and special characters.")</script>';
         echo "<script>window.location.href = 'registration.php';</script>";
         exit;
     }
