@@ -10,12 +10,6 @@ if(isset($_POST['submit']))
 $name=$_POST['name'];
 $email=$_POST['email'];
 $message=$_POST['message'];
-
-// Sanitize user input
-$name = htmlspecialchars(strip_tags($name));
-$email = filter_var($email, FILTER_SANITIZE_EMAIL);
-$message = htmlspecialchars(strip_tags($message));
-
 $sql="insert into contact(Name,Email,Message)values(:name,:email,:message)";
 $query=$dbh->prepare($sql);
 $query->bindParam(':name',$name,PDO::PARAM_STR);
@@ -42,13 +36,13 @@ $query->execute();
   $mail->addAddress($_POST["email"], $_POST['name']);
   
   $mail->Subject = "Thank You For Contacting Us";
-  $mail->Body = sprintf("Dear %s,
+  $mail->Body = "Dear $name,
 
 Hello, Thanks For Contacting EazySurvey. We Have Received Your Message And Will Get Back To You As Soon As Possible.
 
 Your Sincerely
 EazySurvey Team
-easysurvey123@gmail.com", $name);
+easysurvey123@gmail.com";
   
   $mail->send();
   echo '<script>alert("Thank you for contacting us ")</script>';

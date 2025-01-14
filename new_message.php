@@ -7,18 +7,10 @@ require "vendor/autoload.php";
   use PHPMailer\PHPMailer\SMTP;
 if(isset($_POST['submit']))
 {
-    // Sanitize inputs
-    $Name = htmlspecialchars(strip_tags($_POST['name']), ENT_QUOTES, 'UTF-8');
-    $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
-    $Subject = htmlspecialchars(strip_tags($_POST['subject']), ENT_QUOTES, 'UTF-8');
-    $message = htmlspecialchars(strip_tags($_POST['message']), ENT_QUOTES, 'UTF-8');
-
-    // Validate email
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        echo '<script>alert("Invalid email format")</script>';
-        exit;
-    }
-
+    $Name=$_POST['name'];
+    $email=$_POST['email'];
+	$Subject=$_POST['subject'];
+    $message=$_POST['message'];
     $mail = new PHPMailer(true);
   
   // $mail->SMTPDebug = SMTP::DEBUG_SERVER;
@@ -36,13 +28,14 @@ if(isset($_POST['submit']))
   $mail->setFrom($email, "EazySurvey | Survey Management System");
   $mail->addAddress($_POST["email"]);
   
-  // Set email content with sanitized data
-  $mail->Subject = $Subject;
-  $mail->Body = sprintf(
-      "Dear %s,\n\n%s\n\nYour Sincerely\nEazySurvey Team\neasysurvey123@gmail.com",
-      $Name,
-      $message
-  );
+  $mail->Subject = "$Subject";
+  $mail->Body = "Dear $Name ,
+
+$message
+
+Your Sincerely
+EazySurvey Team
+easysurvey123@gmail.com";
   
   $mail->send();
   echo '<script>alert("Email Successfully Sent ")</script>';
@@ -62,15 +55,15 @@ if(isset($_POST['submit']))
 						<b class="text-muted">Message</b>
 						<div class="form-group">
 							<label for="" class="control-label">Name</label>
-							<input type="text" name="name" class="form-control form-control-sm" required value="<?php echo htmlspecialchars(isset($Name) ? $Name : '', ENT_QUOTES, 'UTF-8'); ?>">
+							<input type="text" name="name" class="form-control form-control-sm" required value="<?php echo isset($Name) ? $Name : '' ?>">
 						</div>
                         <div class="form-group">
 							<label for="" class="control-label">Email</label>
-							<input type="text" name="email" class="form-control form-control-sm" required value="<?php echo htmlspecialchars(isset($Email) ? $Email : '', ENT_QUOTES, 'UTF-8'); ?>">
+							<input type="text" name="email" class="form-control form-control-sm" required value="<?php echo isset($Email) ? $Email : '' ?>">
 						</div>
 						<div class="form-group">
 							<label for="" class="control-label">Subject</label>
-							<input type="text" name="subject" class="form-control form-control-sm" required value="<?php echo htmlspecialchars(isset($Email) ? $Email : '', ENT_QUOTES, 'UTF-8'); ?>">
+							<input type="text" name="subject" class="form-control form-control-sm" required value="<?php echo isset($Email) ? $Email : '' ?>">
 						</div>
                         <div class="form-group">
 							<label for="" class="control-label">Message</label>

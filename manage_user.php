@@ -10,6 +10,9 @@ if(isset($_GET['id'])){
 	foreach($user->fetch_array() as $k =>$v){
 		$meta[$k] = $v;
 	}
+foreach($user->fetch_array() as $k =>$v){
+	$meta[$k] = $v;
+}
 }
 ?>
 <div class="container-fluid">

@@ -38,16 +38,15 @@ if($query -> rowCount() > 0)
   $mail->setFrom($email, "EazySurvey | Survey Management System");
   $mail->addAddress($_POST["email"]);
   
-  $sanitizedEmail = htmlspecialchars($email, ENT_QUOTES, 'UTF-8');
   $mail->Subject = "Password Reset";
-  $mail->Body = sprintf("Dear %s,
+  $mail->Body = "Dear $email,
 
 Please follow the link below to change your password.
 http://localhost/survey/reset_password.php
 
 Your Sincerely
 EazySurvey Team 
-easysurvey123@gmail.com", $sanitizedEmail);
+easysurvey123@gmail.com";
   
   $mail->send();
 echo "<script>alert('Reset link has been emailed');</script>";

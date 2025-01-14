@@ -7,7 +7,6 @@ if (isset($_GET['id'])) {
     $stmt->bind_param("i", $_GET['id']);
     $stmt->execute();
     $qry = $stmt->get_result()->fetch_array();
-
     foreach ($qry as $k => $v) {
         $$k = $v;
     }

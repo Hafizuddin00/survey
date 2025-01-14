@@ -121,14 +121,14 @@ if ($_GET['action'] == 'delete_product') {
 
     $product_id = $_POST['product_id'];
 
-    // Use prepared statement instead of direct query
-    $stmt = $conn->prepare("DELETE FROM typeproduct WHERE product_id = ?");
-    if ($stmt) {
-        $stmt->bind_param("s", $product_id);
-        $success = $stmt->execute();
-        $stmt->close();
-        
-        echo $success ? 1 : 0;
+       // Use prepared statement instead of direct query
+       $stmt = $conn->prepare("DELETE FROM typeproduct WHERE product_id = ?");
+       if ($stmt) {
+           $stmt->bind_param("s", $product_id);
+           $success = $stmt->execute();
+           $stmt->close();
+           
+           echo $success ? 1 : 0;
     } else {
         echo 0; // Failed
     }

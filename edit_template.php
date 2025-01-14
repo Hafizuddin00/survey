@@ -11,7 +11,7 @@ if ($result) {
         $$k = $v;
     }
 } else {
-    echo "Error: " . $stmt->error;
+    echo "Error: " . $conn->error;
 }
 
 include 'new_templates.php';

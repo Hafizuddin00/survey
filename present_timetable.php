@@ -31,12 +31,10 @@
                             $staff_id = $row['staff_id'];
                             $unavailable_dates = [];
 
-                            // Fix the second query to use prepared statement as well
                             $schedule_stmt = $conn->prepare("SELECT starteddate, enddate, id, status FROM categories WHERE staff_id = ?");
                             $schedule_stmt->bind_param("s", $staff_id);
                             $schedule_stmt->execute();
                             $schedule_qry = $schedule_stmt->get_result();
-
                             if ($schedule_qry) {
                                 while ($sched = $schedule_qry->fetch_assoc()) {
                                     // Only include this date range if the status is not 'Finished'
