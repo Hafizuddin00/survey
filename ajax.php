@@ -56,6 +56,52 @@ if($action == 'update_quality'){
 		echo $save;
 }
 
+if (isset($_GET['action']) && $_GET['action'] == 'update_category') {
+    // Get the posted data
+    $id = $_POST['id'];
+    $enddate = $_POST['enddate'];
+    $hours = $_POST['hours'];
+    $status = $_POST['status'];
+
+    // Prepare the SQL query to update the category details
+    $updateQuery = $conn->prepare("UPDATE categories SET enddate = ?, hours = ?, status = ? WHERE id = ?");
+    $updateQuery->bind_param("sisi", $enddate, $hours, $status, $id);
+
+    // Execute the query
+    if ($updateQuery->execute()) {
+        echo 'success'; // Return success response
+    } else {
+        echo 'error'; // Return error response
+    }
+}
+
+if (isset($_GET['action']) && $_GET['action'] == 'update_status_order') {
+    // Check if required POST data is set
+    if (isset($_POST['order_id']) && isset($_POST['status'])) {
+        // Get the posted data
+        $order_id = $_POST['order_id'];
+        $status = $_POST['status'];
+
+        // Prepare the SQL query to update the order status
+        $updateQuery = $conn->prepare("UPDATE order_customer SET status = ? WHERE order_id = ?");
+        $updateQuery->bind_param("si", $status, $order_id);
+
+        // Execute the query
+        if ($updateQuery->execute()) {
+            echo 'success'; // Return success response
+        } else {
+            echo 'error'; // Return error response
+        }
+
+        // Close the statement
+        $updateQuery->close();
+    } else {
+        echo 'error: missing required fields'; // Return error if required data is missing
+    }
+}
+
+
+
 if($action == 'save_comment'){
 	$save = $crud->save_comment();
 	if($save)
@@ -141,6 +187,7 @@ if ($_GET['action'] == 'save_recipe') {
     $equipment = $data['equipment'];
     $recipe_step = $data['recipe_step'];
     $ingredients = $data['ingredients'];
+    $qty = $data['qty'];
 
     // Use a prepared statement for UPDATE or INSERT
     if ($id) {
@@ -209,14 +256,14 @@ if ($_GET['action'] == 'save_recipe') {
     }
 
     // Insert the ingredients
-    $stmt = $conn->prepare("INSERT INTO ing_list (recipe_id, ing_type, ing_mass, Unit) VALUES (?, ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO ing_list (recipe_id, ing_type, ing_mass, Unit,qty) VALUES (?, ?, ?, ?,?)");
     if ($stmt) {
         foreach ($ingredients as $ingredient) {
             $ing_type = $ingredient['ingredient'];
             $ing_mass = $ingredient['qty'];
             $unit = $ingredient['unit'];
 
-            $stmt->bind_param("isss", $recipe_id, $ing_type, $ing_mass, $unit);
+            $stmt->bind_param("isssi", $recipe_id, $ing_type, $ing_mass, $unit, $qty);
             if (!$stmt->execute()) {
                 die(json_encode(['error' => $stmt->error]));
             }

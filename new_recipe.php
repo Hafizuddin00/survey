@@ -143,6 +143,10 @@ $new_recipe_id = $row['max_id'] + 1;
                             </div>
                             <small class="text-danger">-- (e.g., Flour 2 kg where 2 is the quantity and kg is the unit)</small>
                         </div>
+                        <div class="form-group">
+                            <label for="qty">Enter Quantity ( recipe ) *</label>
+                            <input type="text" name="qty" id="qty" class="form-control form-control-sm" required value="<?php echo isset($qty) ? $qty : ''; ?>">
+                        </div>
 
                         <!-- Ingredients Table -->
                         <div class="form-group mt-3">
@@ -167,7 +171,7 @@ $new_recipe_id = $row['max_id'] + 1;
 
                 <!-- Form Actions -->
                 <div class="col-lg-12 text-right justify-content-center d-flex flex-column align-items-center">
-                    <small class="text-danger mb-3">This recipe is designed to produce 10 units of each product.</small>
+                    
                     <div>
                         <button type="submit" class="btn btn-success mr-2">Save Recipe</button>
                         <button type="button" class="btn btn-secondary" onclick="location.href='index.php?page=manage_recipe'">Cancel</button>
@@ -271,6 +275,7 @@ $('#manage_recipe').submit(function (e) {
         recipe_name: $('#recipe_name').val(),
         recipe_step: $('#recipe_step').val(),
         equipment: equipment, // Pass the equipment array
+        qty: $('#qty').val(),
         ingredients: ingredients, // Pass the ingredients array
     };
 

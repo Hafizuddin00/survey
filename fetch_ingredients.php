@@ -6,7 +6,7 @@ if (isset($_GET['recipe_name']) && isset($_GET['qty'])) {
     $recipe_name = $_GET['recipe_name'];
     $qty = $_GET['qty'];
 
-    $query = $conn->prepare("SELECT ing_type, ing_mass, Unit FROM ing_list WHERE recipe_id = (SELECT recipe_id FROM receipe WHERE recipe_name = ?)");
+    $query = $conn->prepare("SELECT ing_type, ing_mass, Unit ,qty FROM ing_list WHERE recipe_id = (SELECT recipe_id FROM receipe WHERE recipe_name = ?)");
     if (!$query) {
         die("Error in query preparation: " . $conn->error);
     }
@@ -32,7 +32,7 @@ if (isset($_GET['recipe_name']) && isset($_GET['qty'])) {
                 </thead>
                 <tbody>";
         while ($row = $result->fetch_assoc()) {
-            $calculated_mass = ($qty / 10) * floatval($row['ing_mass']);
+            $calculated_mass = ($qty / $row['qty']) * floatval($row['ing_mass']);
             echo "<tr>
                     <td>{$row['ing_type']}</td>
                     <td>{$calculated_mass}</td>

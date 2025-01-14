@@ -4,7 +4,7 @@
 if (isset($_GET['id'])) {
     $id = $_GET['id']; // Get the id parameter from the URL
 
-    // Prepare the SQL query
+    // Prepare the SQL query to fetch the main record
     $query = "
         SELECT c.*, r.recipe_id, e.spec_id, e.eq_used
         FROM categories c
@@ -37,6 +37,17 @@ if (isset($_GET['id'])) {
         $stmt->close();
     } else {
         echo "Query failed: " . $conn->error;
+    }
+
+    // Get all equipment records for this id
+    $equipmentQuery = "
+        SELECT spec_id, eq_used FROM equipment_record WHERE id = ?
+    ";
+
+    if ($equipmentStmt = $conn->prepare($equipmentQuery)) {
+        $equipmentStmt->bind_param("i", $id); // Bind the id to the query
+        $equipmentStmt->execute();
+        $equipmentResult = $equipmentStmt->get_result();
     }
 }
 ?>
@@ -83,20 +94,25 @@ if (isset($_GET['id'])) {
             <th>Recipe Ingredients:</th>
             <td><b><?php echo $ingredients_data ?></b></td>
         </tr>
+
         <tr>
             <th>Equipment Used:</th>
             <td>
                 <b>
                     <?php 
-                    if ($spec_id && $eq_used) {
-                        echo "Spec ID: " . $spec_id . " - Equipment Used: " . $eq_used;
+                    if ($equipmentResult->num_rows > 0) {
+                        // Loop through all equipment records
+                        while ($equipment = $equipmentResult->fetch_assoc()) {
+                            echo "Spec ID: " . $equipment['spec_id'] . " -> " . $equipment['eq_used'] . "<br>";
+                        }
                     } else {
-                        echo "No equipment data found";
+                        echo "No equipment data found.";
                     }
                     ?>
                 </b>
             </td>
         </tr>
+
         <tr>
             <th>Quality (Status):</th>
             <td><b><?php echo $quality_test ?></b></td>
@@ -111,9 +127,11 @@ if (isset($_GET['id'])) {
         </tr>
     </table>
 </div>
+
 <div class="modal-footer display p-0 m-0">
     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 </div>
+
 <style>
     #uni_modal .modal-footer{
         display: none

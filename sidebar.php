@@ -156,6 +156,14 @@
                 Batch Tracking
               </p>
             </a>
+          </li>
+          <li class="nav-item">
+            <a href="./index.php?page=order_log" class="nav-link nav-order_log">
+              <i class="nav-icon fa fa-folder"></i>
+              <p>
+                Production Report  
+              </p>
+            </a>
           </li>  
         <?php endif; ?>
         </ul>

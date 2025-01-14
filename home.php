@@ -100,7 +100,7 @@
               <div class="info-box-content">
                 <span class="info-box-text">Order Message</span>
                 <span class="info-box-number">
-                  <?php echo $conn->query("SELECT * FROM categories")->num_rows; ?>
+                  <?php echo $conn->query("SELECT * FROM order_customer")->num_rows; ?>
                 </span>
               </div>
               <!-- /.info-box-content -->
@@ -137,6 +137,20 @@
             </div>
             <!-- /.info-box -->
           </div>
+          <div class="col-12 col-sm-6 col-md-3">
+          <a href="./index.php?page=order_log">
+            <div class="info-box">
+              <span class="info-box-icon bg-info elevation-1"><i class="fas fa-folder"></i></span>
+              <div class="info-box-content">
+                <span class="info-box-text">Production Report</span>
+                <span class="info-box-number">
+                  <?php echo $conn->query("SELECT * FROM receipe")->num_rows; ?>
+                </span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+          </div>
           <!-- /.col -->
       </div>
 
@@ -161,11 +175,18 @@
 
               <div class="info-box-content">
                 <span class="info-box-text">Batch Tracking</span>
-                <span class="info-box-number">
-                 
-                 <?php echo $conn->query("SELECT * FROM categories WHERE status != 'Archived'")->num_rows; ?>
-
-                </span>
+                
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+          </div>
+          <div class="col-12 col-sm-6 col-md-3">
+          <a href="./index.php?page=order_log">
+            <div class="info-box">
+              <span class="info-box-icon bg-info elevation-1"><i class="fas fa-folder"></i></span>
+              <div class="info-box-content">
+                <span class="info-box-text">Production Report</span>
               </div>
               <!-- /.info-box-content -->
             </div>

@@ -54,18 +54,7 @@ require_once 'process_finished.php';
                                     <?php echo $row['status'] ?>
                                 </b>
                             </td>
-                            <td class="text-center" style="width: 10px;">
-                                <button type="button" class="btn btn-danger btn-sm btn-flat wave-effect dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
-                                    Action
-                                </button>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item view_production" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>">View</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="./index.php?page=edit_production&id=<?php echo $row['id'] ?>">Edit</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item delete_categories" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>">Delete</a>
-                                </div>
-                            </td>
+                            
                         </tr>    
                         <?php endwhile; ?>
                     </tbody>

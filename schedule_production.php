@@ -2,6 +2,14 @@
 if (!isset($conn)) {
     include 'includes/dbconnection.php';
     include 'db_connect.php';
+    $id = isset($_GET['id']) ? $_GET['id'] : null;
+if ($id) {
+    $sql = "SELECT * FROM categories WHERE id = :id";
+    $query = $dbh->prepare($sql);
+    $query->bindParam(':id', $id, PDO::PARAM_INT);
+    $query->execute();
+    $result = $query->fetch(PDO::FETCH_OBJ);
+}
 }
 ?>
 <div class="col-lg-12">
@@ -191,8 +199,7 @@ if (!isset($conn)) {
                                 }
                             });
 
-
- document.addEventListener('DOMContentLoaded', () => {
+                            document.addEventListener('DOMContentLoaded', () => {
     document.getElementById("recipe_name").addEventListener("change", updateEquipmentData);
     document.getElementById("qty_product").addEventListener("change", updateEquipmentData);
 });
@@ -217,6 +224,16 @@ function updateEquipmentData() {
                 rows.forEach((row, index) => {
                     const input = row.cells[2].querySelector('input');
                     if (input) {
+                        // Attach id and order_id to the equipmentData objects
+                        const equipmentId = row.dataset.id || null; // Assuming data-id is set on the row
+                        const orderId = row.dataset.orderId || null; // Assuming data-order-id is set on the row
+
+                        equipmentData[index] = {
+                            ...equipmentData[index],
+                            id: equipmentId,
+                            order_id: orderId
+                        };
+
                         input.value = equipmentData[index].qty;
                         console.log(`Initial qty for equipment ${index}:`, equipmentData[index].qty);
 
@@ -259,6 +276,7 @@ function updateEquipmentData() {
 
 
 
+
 </script>						
 
 					
@@ -272,7 +290,7 @@ function updateEquipmentData() {
 								<option value="">Select Staff ID</option>
 								<?php 
 								// Fetch Product IDs from the typeproduct table
-								$sql2 = "SELECT * FROM staff_information";
+								$sql2 = "SELECT staff_id FROM users WHERE staff_id NOT IN (0,100005)";
 								$query2 = $dbh->prepare($sql2);
 								$query2->execute();
 								$result2 = $query2->fetchAll(PDO::FETCH_OBJ);
@@ -374,53 +392,95 @@ function updateEquipmentData() {
             input.addEventListener('change', checkAvailability);
         });
     });
-
-
-	$('#manage_categories').submit(function(e) {
+    
+    $('#manage_categories').submit(function(e) {
     e.preventDefault();
     $('input').removeClass("border-danger");
-    $('#response-message').html(''); // Clear any previous message
+    $('#response-message').html(''); // Clear previous message
+
+    const qtyProductInput = document.getElementById("qty_product");
+    let qtyProductValue = 0;
+
+    // Use try-catch for validation
+    try {
+        qtyProductValue = parseInt(qtyProductInput.value, 10);
+        if (isNaN(qtyProductValue) || qtyProductValue <= 0) {
+            throw new Error("Quantity Product cannot be 0 or less. Please enter a valid quantity.");
+        }
+    } catch (error) {
+        alert(error.message); // Show the error message from the exception
+        qtyProductInput.classList.add("border-danger"); // Highlight the invalid input
+        qtyProductInput.value = ""; // Reset the value
+        return; // Exit the submit handler
+    }
+
+    // Initialize validation status
+    let isValid = true;
 
     // Validate equipmentData
     const equipmentDataInput = document.getElementById('equipment_data_input');
-    if (equipmentDataInput) {
-        const equipmentData = JSON.parse(equipmentDataInput.value);
+    try {
+        if (equipmentDataInput) {
+            const equipmentData = JSON.parse(equipmentDataInput.value);
 
-        // Check if any equipment has a quantity of 0
-        const invalidEquipment = equipmentData.find(equipment => equipment.qty === 0);
+            // Check if there is no equipment
+            if (!equipmentData || equipmentData.length === 0) {
+                throw new Error("No equipment data available. Please choose another product.");
+            }
 
-        if (invalidEquipment) {
-            alert("User cannot apply this equipment because it is not available! Please choose another product or wait until other users finish using the equipment.");
-            return; // Stop form submission
+            // Validate each equipment's quantity
+            for (let equipment of equipmentData) {
+                if (equipment.qty <= 0) {
+                    throw new Error(
+                        `Equipment with ID ${equipment.id || 'unknown'} has an invalid quantity (0 or less). Please adjust the quantity.`
+                    );
+                }
+            }
+        } else {
+            throw new Error("Equipment data input is missing. Please ensure the form is filled out correctly.");
         }
+    } catch (error) {
+        alert(error.message); // Show the error message from the exception
+        isValid = false; // Set validation status to false
     }
 
+    // If validation passes, submit the form
+    if (isValid) {
+        submitForm();
+    } else {
+        alert("Validation failed. Please correct the errors and try again.");
+    }
+});
+
+// Function to handle form submission
+function submitForm() {
     start_load();
 
     $.ajax({
-        url: 'ajax.php?action=save_categories', // Ensure this path is correct
-        data: new FormData($(this)[0]),
+        url: 'ajax.php?action=save_categories',
+        data: new FormData($('#manage_categories')[0]),
         cache: false,
         contentType: false,
         processData: false,
         method: 'POST',
         success: function(resp) {
             if (resp == 1) {
-                alert_toast('Data successfully saved.', "success"); // Trigger the success toast
+                alert_toast('Data successfully saved.', "success");
                 setTimeout(function() {
                     location.replace('index.php?page=production');
-                }, 1500); // Give time for the toast to show
+                }, 1500);
             } else {
-                // If there's an error, log it for debugging
                 console.log('Error: ', resp);
-                $('#response-message').html('Failed to save the category.'); // Display error message on page
+                $('#response-message').html('Failed to save the category.');
             }
         },
         error: function(xhr, status, error) {
-            console.log('AJAX Error: ', status, error); // Log any AJAX errors
+            console.log('AJAX Error: ', status, error);
             $('#response-message').html('An error occurred while saving the category.');
         }
     });
-});
+}
+
+
 
 </script>

@@ -18,7 +18,7 @@
                         <select id="staff_id" name="staff_id" class="form-control">
                             <option value="">--Select--</option>
                             <?php
-                            $staff_query = $conn->query("SELECT staff_id FROM users");
+                            $staff_query = $conn->query("SELECT staff_id FROM users WHERE staff_id NOT IN (0,100005)");
                             while ($staff_row = $staff_query->fetch_assoc()) {
                                 echo "<option value='{$staff_row['staff_id']}' " . (isset($_POST['staff_id']) && $_POST['staff_id'] == $staff_row['staff_id'] ? 'selected' : '') . ">{$staff_row['staff_id']}</option>";
                             }
