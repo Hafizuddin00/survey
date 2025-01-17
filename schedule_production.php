@@ -28,7 +28,7 @@ if ($id) {
                             <select name="order_id" id="order_id" class="form-control form-control-sm">
                                 <option value="">Select Order ID</option>
                                 <?php 
-                                $sql2 = "SELECT * FROM order_customer";
+                                $sql2 = "SELECT * FROM order_customer WHERE status != 'Finished'";
                                 $query2 = $dbh->prepare($sql2);
                                 $query2->execute();
                                 $result2 = $query2->fetchAll(PDO::FETCH_OBJ);

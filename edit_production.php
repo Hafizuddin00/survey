@@ -3,11 +3,20 @@ include 'includes/dbconnection.php';
 include 'db_connect.php';
 
 // Fetch data based on the ID
-if (isset($_GET['id'])) {
-    $qry = $conn->query("SELECT * FROM categories WHERE id = ".$_GET['id'])->fetch_array();
-    foreach($qry as $k => $v){
-        $$k = $v;
+if (isset($_GET['id']) && is_numeric($_GET['id'])) {
+    $qry = $conn->query("SELECT * FROM categories WHERE id = " . $_GET['id']);
+    if ($qry && $qry->num_rows > 0) {
+        $result = $qry->fetch_array();
+        foreach ($result as $k => $v) {
+            $$k = $v;
+        }
+    } else {
+        echo "<script>alert('No category found with the given ID.'); location.href='index.php?page=production';</script>";
+        exit;
     }
+} else {
+    echo "<script>alert('Invalid ID provided.'); location.href='index.php?page=production';</script>";
+    exit;
 }
 ?>
 
@@ -15,8 +24,6 @@ if (isset($_GET['id'])) {
     <div class="card">
         <div class="card-body">
             <!-- Display category details and form for editing -->
-        
-
             <form id="editForm">
                 <input type="hidden" name="id" value="<?php echo isset($id) ? $id : ''; ?>">
 
@@ -37,7 +44,7 @@ if (isset($_GET['id'])) {
 
                 <div class="form-group text-right">
                     <button type="button" id="editBtn" class="btn btn-success">Edit</button>
-                    <button type="button" class="btn btn-secondary" onclick="location.href='index.php?page=categories'">Cancel</button>
+                    <button type="button" class="btn btn-secondary" onclick="location.href='index.php?page=production'">Cancel</button>
                 </div>
             </form>
         </div>
@@ -67,7 +74,7 @@ $('#editBtn').click(function (e) {
             success: function (resp) {
                 if (resp === 'success') {
                     alert('Category updated successfully.');
-                    location.href = 'index.php?page=production';// Redirect to production page after success
+                    location.href = 'index.php?page=production'; // Redirect to production page after success
                 } else {
                     alert('Failed to update category.');
                 }

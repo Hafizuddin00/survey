@@ -20,28 +20,28 @@ Class Action {
 	    ob_end_flush();
 	}
 
-	function login() {
+	function login(): int {
 		session_start();
-		
+	
 		// Use prepared statements to prevent SQL injection
 		$stmt = $this->db->prepare("
 			SELECT *, CONCAT(fullname) AS name 
 			FROM users 
 			WHERE email = ?
 		");
-		
+	
 		if (!$stmt) {
 			error_log("Prepare failed: " . $this->db->error);
-			return 3;
+			return 3; // Return 3 for login failure
 		}
-		
+	
 		$stmt->bind_param("s", $_POST['email']);
 		$stmt->execute();
 		$result = $stmt->get_result();
-		
+	
 		if ($result->num_rows > 0) {
 			$user = $result->fetch_array();
-			
+	
 			// Verify password using password_verify()
 			if (password_verify($_POST['password'], $user['password'])) {
 				foreach ($user as $key => $value) {
@@ -49,17 +49,17 @@ Class Action {
 						$_SESSION['login_' . $key] = $value;
 					}
 				}
-				
+	
 				if (isset($user['staff_id'])) {
 					$_SESSION['login_staff_id'] = $user['staff_id'];
 				}
-				
+	
 				return 1; // Login successful
 			}
 		}
+	
 		return 3; // Login failed
 	}
-	
 	
 	
 	function logout(){
